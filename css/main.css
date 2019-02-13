@@ -1,0 +1,38 @@
+@import "/vendor/beaker-app-stdlib/css/common.css";
+@import "/vendor/beaker-app-stdlib/css/fontawesome.css";
+
+body {
+  font-size: 13px;
+}
+
+.start-wrapper {
+  width: 460px;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 640px) {
+  .start-wrapper {
+    width: 580px;
+  }
+}
+
+@media (min-width: 740px) {
+  .start-wrapper {
+    width: 700px;
+  }
+}
+
+@media (min-width: 900px) {
+  .start-wrapper {
+    width: 830px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .start-wrapper {
+    width: 950px;
+  }
+}
