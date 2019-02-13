@@ -1,116 +1,183 @@
-import {LitElement, html, css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import autocompleteCSS from '/vendor/beaker-app-stdlib/css/com/autocomplete-css.js'
+import {LitElement, html} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import searchCSS from '../../css/com/search.css.js'
+
+// constants
+// =
+
+const SEARCH_GROUPS = [
+  {key: 'fixed'},
+  {key: 'apps', label: 'Applications'},
+  {key: 'people', label: 'People'},
+  {key: 'webPages', label: 'Web pages'},
+  {key: 'imageCollections', label: 'Image collections'},
+  {key: 'fileShares', label: 'File shares'},
+  {key: 'bookmarks', label: 'Bookmarks'},
+  {key: 'history', label: 'Your browsing history'},
+  {key: 'others', label: 'Saved to your Library'}
+]
 
 class Search extends LitElement {
-  render() {
+  static get properties() {
+    return { 
+      query: {type: String},
+      searchResults: {type: Object},
+      activeSearchResultIndex: {type: Number},
+      isSearchFocused: {type: Boolean}
+    }
+  }
+
+  constructor () {
+    super()
+    this.searchResults = {}
+    this.query = ''
+    this.lastQuery = undefined
+    this.activeSearchResultIndex = 0
+    this.isSearchFocused = false
+  }
+
+  // rendering
+  // =
+
+  render () {
+    const renderSearchResultGroup = (group, label) => {
+      if (!group || !group.length) return ''
+      return html`
+        <div class="autocomplete-result-group">
+          ${label ? html`<div class="autocomplete-result-group-title">${label}</div>` : ''}
+          ${group.map(renderSearchResult)}
+        </div>
+      `
+    }
+
+    var i = 0
+    const renderSearchResult = (res) => {
+      return html`
+        <a href=${res.url} class="autocomplete-result search-result ${i++ === this.activeSearchResultIndex ? 'active' : ''}">
+          ${res.icon
+              ? html`<i class="icon ${res.icon}"></i>`
+              : res.type === 'user'
+                ? html`<img class="icon favicon rounded" src="${res.url}/thumb"/>`
+                : html`<img class="icon favicon" src="beaker-favicon:32,${res.url}"/>`
+            }
+          <span class="title">${res.title}</span>
+          <span class="label">— ${res.url}</span>
+        </a>
+      `
+    }
+
+    const onKeyUp = e => {
+      var keyCode = e.keyCode
+      var inputValue = e.target.value
+      delay(() => this.onInputSearch(keyCode, inputValue), e)
+    }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/common.css">
       <div class="autocomplete-container search-container">
-        <input type="text" autofocus="autofocus" placeholder="Search your Web" class="search">
+        <input type="text" autofocus @focus=${this.onFocusSearch} @blur=${this.onBlurSearch} class="search" placeholder="Search your Web" @keyup=${onKeyUp}/>
         <i class="fa fa-search"></i>
 
-        <button title="Submit search query" class="btn primary search-btn">
+        <button class="btn primary search-btn" title="Submit search query" @click=${this.onClickSubmitActiveSearch}>
           <i class="fa fa-arrow-right"></i>
         </button>
+
+        ${this.query.length && this.isSearchFocused
+          ? html`<div class="search-results autocomplete-results">
+            ${SEARCH_GROUPS.map(({key, label}) => renderSearchResultGroup(this.searchResults[key], label))}
+          </div>`
+          : ''}
       </div>`
   }
-}
 
-Search.styles = css`
-${autocompleteCSS}
-.search-container {
-  max-width: 600px;
-  margin: 0 auto 20px;
-  padding: 15px;
-}
+  // event handlers
+  // =
 
-.spinner,
-.close-btn,
-.search {
-  position: absolute;
-}
+  onFocusSearch () {
+    this.isSearchFocused = true
+  }
 
-input.search {
-  left: 0;
-  top: 0;
-  width: calc(100% - 50px);
-  height: 40px;
-  padding: 0 10px;
-  padding-left: 47px;
-  border-radius: 0;
-  border-radius: 4px 0 0 4px;
-  border-right: 0;
-}
+  onBlurSearch () {
+    this.isSearchFocused = false
+  }
+  
+  onClickSubmitActiveSearch () {
+    var res = this.getActiveSearchResult()
+    if (!res) return
+    window.location = res.url
+  }
 
-input.search:invalid + .close-btn {
-  opacity: 0;
-}
+  onInputSearch (keyCode, inputValue) {
+    // enter
+    if (keyCode === 13) {
+      // ENTER
+      window.location = this.getActiveSearchResult().url
+    } else if (keyCode === 40) {
+      // DOWN
+      this.moveActiveSearchResult(1)
+    } else if (keyCode === 38) {
+      // UP
+      this.moveActiveSearchResult(-1)
+    } else {
+      this.onUpdateSearchQuery(inputValue)
+    }
+  }
 
-input:focus {
-  box-shadow: none;
-}
+  async onUpdateSearchQuery (q) {
+    var searchResults = {}
+    var query = q.length ? q.toLowerCase() : ''
+  
+    // reset selection if query changed
+    if (this.lastQuery !== query) {
+      this.activeSearchResultIndex = 0
+    }
+    this.lastQuery = query
+  
+    if (query.length) {
+      // TODO
+      // searchResults = await beaker.crawler.listSuggestions(query)
+      searchResults.fixed = [{
+        url: `beaker://search?q=${encodeURIComponent(query)}`,
+        icon: 'fa fa-search',
+        title: `Search your Web for "${query}"`
+      }]
+    }
+  
+    this.query = query
+    this.searchResults = searchResults
+  }
 
-i.fa-search {
-  position: absolute;
-  font-size: 16px;
-  left: 17px;
-  top: 11px;
-  color: rgba(0,0,0,0.4);
-}
+  // search-result management
+  // =
 
-.btn.search-btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50px;
-  height: 40px;
-  border-radius: 0 4px 4px 0;
-  font-size: 20px;
-  line-height: 16px;
-}
+  getMergedSearchResults () {
+    var list = []
+    for (let group of SEARCH_GROUPS) {
+      list = list.concat(this.searchResults[group.key])
+    }
+    return list
+  }
 
-i.fa-arrow-right {
-  -webkit-text-stroke: 1px @blue;
-}
+  getActiveSearchResult () {
+    var mergedResults = this.getMergedSearchResults()
+    return mergedResults[this.activeSearchResultIndex || 0]
+  }
 
-.search-results {
-  top: 41px;
-  max-height: calc(90vh - 300px);
-  overflow-y: auto;
+  moveActiveSearchResult (dir) {
+    var mergedResults = this.getMergedSearchResults()
+    var i = this.activeSearchResultIndex || 0
+    i += dir
+    // make sure we don't go out of bounds
+    if (i < 0) i = 0
+    if (i > mergedResults.length - 1) i = mergedResults.length - 1
+    this.activeSearchResultIndex = i
+  }
 }
+Search.styles = searchCSS
+customElements.define('start-search', Search)
 
-.search-result .icon.fa-search {
-  position: initial;
+// helpers
+// =
+
+function delay (cb, param) {
+  window.clearTimeout(cb)
+  setTimeout(cb, 75, param)
 }
-
-.filter-btn {
-  position: absolute;
-  left: ~"calc(100% + 3px)";
-  top: 1px;
-}
-
-.filter-btn .dropdown-items {
-  right: -3px;
-}
-
-.dropdown-items.filters {
-  width: 200px;
-}
-
-.spinner {
-  left: 8px;
-  top: 8px;
-}
-
-.spinner.hidden {
-  display: none;
-}
-
-.close-btn {
-  right: 7px;
-  top: 7px;
-}
-`
-
-customElements.define('start-search', Search);
