@@ -1,6 +1,6 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import commonCSS from '/vendor/beaker-app-stdlib/css/common-css.js'
-import autocompleteCSS from '/vendor/beaker-app-stdlib/css/com/autocomplete-css.js'
+import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
+import autocompleteCSS from '/vendor/beaker-app-stdlib/css/com/autocomplete.css.js'
 
 const cssStr = css`
 ${commonCSS}
