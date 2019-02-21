@@ -1,10 +1,12 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 import autocompleteCSS from '/vendor/beaker-app-stdlib/css/com/autocomplete.css.js'
+import searchInputCSS from '/vendor/beaker-app-stdlib/css/com/search-input.css.js'
 
 const cssStr = css`
 ${commonCSS}
 ${autocompleteCSS}
+${searchInputCSS}
 
 .search-container {
   max-width: 600px;
@@ -12,38 +14,10 @@ ${autocompleteCSS}
   padding: 15px;
 }
 
-.spinner,
-.close-btn,
-.search {
-  position: absolute;
-}
-
 input.search {
-  left: 0;
-  top: 0;
-  width: calc(100% - 50px);
-  height: 40px;
-  padding: 0 10px;
-  padding-left: 47px;
-  border-radius: 0;
   border-radius: 4px 0 0 4px;
   border-right: 0;
-}
-
-input.search:invalid + .close-btn {
-  opacity: 0;
-}
-
-input:focus {
-  box-shadow: none;
-}
-
-i.fa-search {
-  position: absolute;
-  font-size: 16px;
-  left: 17px;
-  top: 11px;
-  color: rgba(0,0,0,0.4);
+  width: calc(100% - 50px);
 }
 
 .btn.search-btn {
