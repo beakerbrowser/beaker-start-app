@@ -13,6 +13,12 @@ body {
   transform: translate(-50%, -50%);
 }
 
+beaker-app-header-search {
+  margin: 0 auto;
+  display: block;
+  width: 600px;
+}
+
 @media (min-width: 640px) {
   .start-wrapper {
     width: 580px;
