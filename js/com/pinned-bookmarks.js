@@ -77,19 +77,10 @@ class PinnedBookmarks extends LitElement {
     try {
       // render popup
       var b = await BeakerEditBookmarkPopup.create(originalBookmark)
-      console.log('TODO', b)
-  
-      // TODO
-      // delete old bookmark if url changed
-      // if (originalBookmark.href !== b.href) {
-      //   await beaker.bookmarks.unbookmarkPrivate(originalBookmark.href)
-      // }
-  
-      // // set the bookmark
-      // await beaker.bookmarks.bookmarkPrivate(b.href, b)
-      // await beaker.bookmarks.setBookmarkPinned(b.href, b.pinned)
-  
-      // await loadBookmarks()
+      
+      // make update
+      await bookmarks.edit(originalBookmark.href, b)
+      await this.load()
     } catch (e) {
       // ignore
       console.log(e)
