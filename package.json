@@ -1,0 +1,19 @@
+{
+  "name": "@beaker/start-app",
+  "version": "1.0.0",
+  "description": "The Beaker \"Start Page\" app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pfrazee/beaker-start-app.git"
+  },
+  "author": "Paul Frazee <pfrazee@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pfrazee/beaker-start-app/issues"
+  },
+  "homepage": "https://github.com/pfrazee/beaker-start-app#readme"
+}
