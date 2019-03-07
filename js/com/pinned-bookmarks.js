@@ -24,6 +24,9 @@ class PinnedBookmarks extends LitElement {
   async load () {
     this.shouldShow = (await beaker.browser.getSetting('start_section_hide_pinned_bookmarks')) !== 1
     this.bookmarks = await bookmarks.list({filters: {pinned: true}})
+    this.bookmarks.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)
+    await this.updateComplete
+    this.addSortable()
   }
 
   // rendering
@@ -140,6 +143,29 @@ class PinnedBookmarks extends LitElement {
     }
 
     toast.create('Section removed', '', 10e3, {label: 'Undo', click: undo})
+  }
+
+  // util
+  // =
+
+  addSortable () {
+    new Sortable(this.shadowRoot.querySelector('.pinned-bookmarks'), {
+      group: 'pinned-bookmarks',
+      draggable: '.pinned-bookmark',
+      dataIdAttr: 'href',
+      forceFallback: true,
+      direction: 'horizontal',
+      store: {
+        get: () => {
+          return this.bookmarks.map(b => b.href)
+        },
+        set: async (sortable) => {
+          var pins = sortable.toArray()
+          await bookmarks.configure({pins})
+          this.load()
+        }
+      }
+    })
   }
 }
 
