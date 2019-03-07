@@ -8,15 +8,22 @@ body {
 .start-wrapper {
   width: 460px;
   position: absolute;
-  top: 45%;
+  top: 120px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
 }
 
 beaker-app-header-search {
-  margin: 0 auto;
+  margin: 0 auto 80px;
   display: block;
   width: 600px;
+}
+
+start-pinned-bookmarks,
+start-flyers,
+start-suggested-follows {
+  display: block;
+  margin-bottom: 60px;
 }
 
 @media (min-width: 640px) {

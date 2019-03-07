@@ -9,14 +9,12 @@ import pinnedBookmarksCSS from '../../css/com/pinned-bookmarks.css.js'
 class PinnedBookmarks extends LitElement {
   static get properties() {
     return { 
-      pinGridMode: {type: String},
       bookmarks: {type: Array}
     }
   }
 
   constructor () {
     super()
-    this.pinGridMode = localStorage.pinGridMode || 'square-mode'
     this.bookmarks = []
     this.load()
   }
@@ -32,13 +30,8 @@ class PinnedBookmarks extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/common.css">
-      <div class="pinned-bookmarks-container ${this.pinGridMode}">
-        <div class="pinned-bookmarks-config">
-          <div class="mode">
-            ${this.renderPinGridMode('fas fa-th', 'square-mode')}
-            ${this.renderPinGridMode('fas fa-th-large', 'horz-mode')}
-          </div>
-        </div>
+      <div class="pinned-bookmarks-container">
+        <h2><span class="fas fa-thumbtack"></span> Pinned Bookmarks</h2>
         <div class="pinned-bookmarks">
           ${this.bookmarks.map(b => html`
             <a class="pinned-bookmark" href=${b.href} @contextmenu=${e => this.onContextmenuPinnedBookmark(e, b)}>
@@ -48,19 +41,11 @@ class PinnedBookmarks extends LitElement {
           `)}
         </div>
       </div>
-    </div>`
-  }
-
-  renderPinGridMode (icon, mode) {
-    return html`<span class="${mode === this.pinGridMode ? 'active' : ''} ${icon}" @click=${() => this.onSetPinGridMode(mode)}></span>`
+    `
   }
 
   // events
   // =
-
-  onSetPinGridMode (mode) {
-    this.pinGridMode = localStorage.pinGridMode = mode
-  }
 
   async onContextmenuPinnedBookmark (e, bookmark) {
     e.preventDefault()

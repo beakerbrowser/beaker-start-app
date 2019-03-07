@@ -12,7 +12,7 @@ class BeakerBlueNotice extends LitElement {
 
 BeakerBlueNotice.styles = css`
 div {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 20px;
   font-size: 22px;
