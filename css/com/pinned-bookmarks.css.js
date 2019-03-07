@@ -1,9 +1,22 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 
 const cssStr = css`
+${commonCSS}
+
 h2 {
   font-size: 11px;
   color: rgba(0,0,0,.75);
+}
+
+h2 button {
+  outline: 0;
+  cursor: pointer;
+  float: right;
+}
+
+h2 button:hover {
+  background: #eee;
 }
 
 .pinned-bookmarks {
@@ -43,19 +56,6 @@ h2 {
   max-width: 100px;
   margin: auto;
   margin-top: 10px;
-}
-
-.explorer-pin {
-  outline: 0;
-  background: none;
-}
-
-.explorer-pin:hover {
-  background: #eee;
-}
-
-.explorer-pin i {
-  color: rgba(0,0,0,.15);
 }
 
 @media (min-width: 640px) {

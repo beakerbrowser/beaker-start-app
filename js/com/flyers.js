@@ -1,4 +1,5 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import flyersCSS from '../../css/com/flyers.css.js'
 
 class Flyers extends LitElement {
@@ -7,7 +8,11 @@ class Flyers extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       
       <div class="flyers-container">
-        <h2><span class="fas fa-bullhorn"></span> Flyers</h2>
+        <h2>
+          <span class="fas fa-bullhorn"></span>
+          Flyers
+          <button @click=${this.onClickManagerDropdown}><span class="fas fa-ellipsis-h"></span></button>
+        </h2>
         <div class="flyers">
           <a class="flyer" href="dat://beakerbrowser.com">
             <h3>Beaker.Dev is online!</h3>
@@ -61,6 +66,21 @@ class Flyers extends LitElement {
   // events
   // =
 
+  onClickManagerDropdown (e) {
+    e.stopPropagation()
+    contextMenu.create({
+      x: e.clientX,
+      y: e.clientY,
+      right: true,
+      noBorders: true,
+      items: [
+        {icon: 'fas fa-times', label: 'Remove section', click: () => this.onRemoveSection()}
+      ],
+      style: 'padding: 4px 0;',
+      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'
+    })
+  }
+
   onClickSublink (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -79,6 +99,10 @@ class Flyers extends LitElement {
       e.stopPropagation()
       window.open(e.currentTarget.dataset.href)
     }
+  }
+
+  async onRemoveSection () {
+    // TODO
   }
 }
 Flyers.styles = flyersCSS
