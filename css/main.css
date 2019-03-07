@@ -7,11 +7,7 @@ body {
 
 .start-wrapper {
   width: 460px;
-  position: absolute;
-  top: 120px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  padding-bottom: 100px;
+  margin: 120px auto;
 }
 
 beaker-app-header-search {

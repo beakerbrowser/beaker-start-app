@@ -1,9 +1,32 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
+import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import flyersCSS from '../../css/com/flyers.css.js'
 
 class Flyers extends LitElement {
+  static get properties() {
+    return {
+      shouldShow: {type: Boolean}
+    }
+  }
+
+  constructor () {
+    super()
+    this.shouldShow = false
+    this.load()
+  }
+
+  async load () {
+    this.shouldShow = (await beaker.browser.getSetting('start_section_hide_flyers')) !== 1
+  }
+
+  // rendering
+  // =
+
   render() {
+    if (!this.shouldShow) {
+      return html`<div></div>`
+    }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       
@@ -69,8 +92,8 @@ class Flyers extends LitElement {
   onClickManagerDropdown (e) {
     e.stopPropagation()
     contextMenu.create({
-      x: e.clientX,
-      y: e.clientY,
+      x: e.currentTarget.getBoundingClientRect().right,
+      y: e.currentTarget.getBoundingClientRect().bottom + document.documentElement.scrollTop,
       right: true,
       noBorders: true,
       items: [
@@ -102,7 +125,15 @@ class Flyers extends LitElement {
   }
 
   async onRemoveSection () {
-    // TODO
+    await beaker.browser.setSetting('start_section_hide_flyers', 1)
+    this.shouldShow = false
+
+    const undo = async () => {
+      await beaker.browser.setSetting('start_section_hide_flyers', 0)
+      this.shouldShow = true
+    }
+
+    toast.create('Section removed', '', 10e3, {label: 'Undo', click: undo})
   }
 }
 Flyers.styles = flyersCSS

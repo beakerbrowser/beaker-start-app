@@ -3,23 +3,26 @@ import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { BeakerEditBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/edit-bookmark.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
-import { bookmarks} from '../tmp-beaker.js'
+import { bookmarks } from '../tmp-beaker.js'
 import pinnedBookmarksCSS from '../../css/com/pinned-bookmarks.css.js'
 
 class PinnedBookmarks extends LitElement {
   static get properties() {
-    return { 
+    return {
+      shouldShow: {type: Boolean},
       bookmarks: {type: Array}
     }
   }
 
   constructor () {
     super()
+    this.shouldShow = false
     this.bookmarks = []
     this.load()
   }
 
   async load () {
+    this.shouldShow = (await beaker.browser.getSetting('start_section_hide_pinned_bookmarks')) !== 1
     this.bookmarks = await bookmarks.list({filters: {pinned: true}})
   }
 
@@ -27,6 +30,9 @@ class PinnedBookmarks extends LitElement {
   // =
 
   render() {
+    if (!this.shouldShow) {
+      return html`<div></div>`
+    }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="pinned-bookmarks-container">
@@ -53,8 +59,8 @@ class PinnedBookmarks extends LitElement {
   onClickManagerDropdown (e) {
     e.stopPropagation()
     contextMenu.create({
-      x: e.clientX,
-      y: e.clientY,
+      x: e.currentTarget.getBoundingClientRect().right,
+      y: e.currentTarget.getBoundingClientRect().bottom + document.documentElement.scrollTop,
       right: true,
       noBorders: true,
       items: [
@@ -125,7 +131,15 @@ class PinnedBookmarks extends LitElement {
   }
 
   async onRemoveSection () {
-    // TODO
+    await beaker.browser.setSetting('start_section_hide_pinned_bookmarks', 1)
+    this.shouldShow = false
+
+    const undo = async () => {
+      await beaker.browser.setSetting('start_section_hide_pinned_bookmarks', 0)
+      this.shouldShow = true
+    }
+
+    toast.create('Section removed', '', 10e3, {label: 'Undo', click: undo})
   }
 }
 
