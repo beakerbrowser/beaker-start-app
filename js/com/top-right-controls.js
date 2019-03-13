@@ -1,5 +1,6 @@
 import {LitElement, html, css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {profiles} from '../tmp-beaker.js'
+import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as appMenu from '/vendor/beaker-app-stdlib/js/com/app-menu.js'
 
 class TopRightControls extends LitElement {
@@ -36,10 +37,28 @@ class TopRightControls extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div>
+        <a @click=${this.onClickNewMenu} style="font-size: 14px; font-weight: 500; line-height: 14px;">New <i class="fas fa-caret-down"></i></a>
         <a @click=${this.onClickAppMenu}><span class="fas fa-th"></span></a>
         <a href="beaker://settings"><span class="fas fa-cog"></span></a>
         <a class="profile" href="intent:unwalled.garden/view-profile?url=${encodeURIComponent(this.userUrl)}"><span>${this.userName}</span>${this.userImg}</a>
       </div>`
+  }
+
+  onClickNewMenu (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const goto = (url) => { window.location = url }
+    contextMenu.create({
+      x: e.currentTarget.getBoundingClientRect().right,
+      y: e.currentTarget.getBoundingClientRect().bottom,
+      right: true,
+      withTriangle: true,
+      noBorders: true,
+      roomy: true,
+      style: 'padding: 4px 0; min-width: 160px; font-size: 14px; color: #000',
+      items: [{icon: false, label: 'Website', click: () => goto('beaker://library/?new')}]
+    })
   }
 
   onClickAppMenu (e) {
