@@ -44,6 +44,10 @@ class Applications extends LitElement {
             <img class="favicon" src="beaker-favicon:64,beaker://library">
             <div class="title">Library</div>
           </a>
+          <a class="application" href="beaker://search">
+            <img class="favicon" src="beaker-favicon:64,beaker://search">
+            <div class="title">Search</div>
+          </a>
           <a class="application" href="dat://beaker.social">
             <img class="favicon" src="beaker-favicon:64,dat://beaker.social">
             <div class="title">Beaker.Social</div>
