@@ -64,7 +64,7 @@ class Applications extends LitElement {
     e.stopPropagation()
     contextMenu.create({
       x: e.currentTarget.getBoundingClientRect().right,
-      y: e.currentTarget.getBoundingClientRect().bottom + document.documentElement.scrollTop,
+      y: e.currentTarget.getBoundingClientRect().bottom,
       right: true,
       noBorders: true,
       items: [
