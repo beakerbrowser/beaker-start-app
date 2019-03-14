@@ -28,6 +28,11 @@ class TopRightControls extends LitElement {
     this.user = null
     this.cacheBuster = 0
     this.load()
+    window.addEventListener('focus', () => {
+      // load latest when we're opened, to make sure we stay in sync
+      this.load()
+      this.cacheBuster = Date.now()
+    })
   }
 
   async load () {
