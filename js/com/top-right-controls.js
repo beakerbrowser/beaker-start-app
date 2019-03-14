@@ -3,6 +3,7 @@ import {profiles} from '../tmp-beaker.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import {BeakerEditProfile} from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
 import {BeakerEditThumb} from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
+import _debounce from '/vendor/lodash.debounce.js'
 
 const createContextMenu = (el, items) => contextMenu.create({
   x: el.getBoundingClientRect().right,
@@ -28,11 +29,11 @@ class TopRightControls extends LitElement {
     this.user = null
     this.cacheBuster = 0
     this.load()
-    window.addEventListener('focus', () => {
+    window.addEventListener('focus', _debounce(() => {
       // load latest when we're opened, to make sure we stay in sync
       this.load()
       this.cacheBuster = Date.now()
-    })
+    }, 1e3, {leading: true}))
   }
 
   async load () {
