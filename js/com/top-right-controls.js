@@ -1,23 +1,37 @@
 import {LitElement, html, css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {profiles} from '../tmp-beaker.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
+import {BeakerEditProfile} from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
+import {BeakerEditThumb} from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
+
+const createContextMenu = (el, items) => contextMenu.create({
+  x: el.getBoundingClientRect().right,
+  y: el.getBoundingClientRect().bottom,
+  right: true,
+  withTriangle: true,
+  noBorders: true,
+  style: 'padding: 4px 0; min-width: 200px; font-size: 14px; color: #000',
+  fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
+  items
+})
 
 class TopRightControls extends LitElement {
   static get properties () {
     return {
-      user: {type: Object}
+      user: {type: Object},
+      cacheBuster: {type: Number}
     }
   }
 
   constructor () {
     super()
     this.user = null
+    this.cacheBuster = 0
     this.load()
   }
 
   async load () {
     this.user = await profiles.getCurrentUser()
-    console.log(this.user)
   }
 
   get userName () {
@@ -29,7 +43,7 @@ class TopRightControls extends LitElement {
   }
 
   get userImg () {
-    return this.user ? html`<img src="${this.user.url}/thumb">` : ''
+    return this.user ? html`<img src="${this.user.url}/thumb?cache=${this.cacheBuster}">` : ''
   }
 
   render() {
@@ -38,7 +52,7 @@ class TopRightControls extends LitElement {
       <div>
         <a @click=${this.onClickNewMenu} style="font-size: 14px; font-weight: 500; line-height: 14px;">New <i class="fas fa-caret-down"></i></a>
         <a href="beaker://settings"><span class="fas fa-cog"></span></a>
-        <a class="profile" href="intent:unwalled.garden/view-profile?url=${encodeURIComponent(this.userUrl)}"><span>${this.userName}</span>${this.userImg}</a>
+        <a @click=${this.onClickProfileMenu} class="profile"><span>${this.userName}</span>${this.userImg}</a>
       </div>`
   }
 
@@ -47,16 +61,36 @@ class TopRightControls extends LitElement {
     e.stopPropagation()
 
     const goto = (url) => { window.location = url }
-    contextMenu.create({
-      x: e.currentTarget.getBoundingClientRect().right,
-      y: e.currentTarget.getBoundingClientRect().bottom,
-      right: true,
-      withTriangle: true,
-      noBorders: true,
-      roomy: true,
-      style: 'padding: 4px 0; min-width: 160px; font-size: 14px; color: #000',
-      items: [{icon: false, label: 'Website', click: () => goto('beaker://library/?new')}]
-    })
+    const items = [
+      {icon: false, label: 'Website', click: () => goto('beaker://library/?new')}
+    ]
+    createContextMenu(e.currentTarget, items)
+  }
+
+  onClickProfileMenu (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const goto = (url) => { window.location = url }
+    const editProfile = async () => {
+      this.user = await BeakerEditProfile.runFlow(profiles)
+    }
+    const editThumb = async () => {
+      await BeakerEditThumb.runFlow(profiles)
+      this.cacheBuster = Date.now()
+    }
+    const items = [
+      {icon: 'fas fa-fw fa-external-link-alt', label: 'Your website', click: () => goto(this.userUrl)},
+      '-',
+      html`<div class="section-header small light">Social</div>`,
+      {icon: 'fas fa-fw fa-user', label: 'Your social profile', click: () => goto(`intent:unwalled.garden/view-profile?url=${encodeURIComponent(this.userUrl)}`)},
+      {icon: 'fas fa-fw fa-rss', label: 'Followed sites', click: () => goto('beaker://library/?category=following')},
+      '-',
+      html`<div class="section-header small light">Settings</div>`,
+      {icon: false, label: 'Edit your profile', click: editProfile},
+      {icon: false, label: 'Change your photo', click: editThumb},
+    ]
+    createContextMenu(e.currentTarget, items)
   }
 }
 
