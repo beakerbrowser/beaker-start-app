@@ -41,7 +41,7 @@ class TopRightControls extends LitElement {
   }
 
   get userName () {
-    return this.user ? this.user.title : ''
+    return this.user && this.user.title || 'Anonymous'
   }
 
   get userUrl () {
@@ -86,7 +86,7 @@ class TopRightControls extends LitElement {
       this.cacheBuster = Date.now()
     }
     const items = [
-      {icon: 'fas fa-fw fa-external-link-alt', label: 'Your website', click: () => goto(this.userUrl)},
+      {icon: 'fas fa-fw fa-external-link-alt', label: 'View your website', click: () => goto(this.userUrl)},
       '-',
       html`<div class="section-header small light">Social</div>`,
       {icon: 'fas fa-fw fa-user', label: 'Your social profile', click: () => goto(`intent:unwalled.garden/view-profile?url=${encodeURIComponent(this.userUrl)}`)},

@@ -3,6 +3,7 @@ import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { BeakerEditBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/edit-bookmark.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
+import _debounce from '/vendor/lodash.debounce.js'
 import { bookmarks } from '../tmp-beaker.js'
 import pinnedBookmarksCSS from '../../css/com/pinned-bookmarks.css.js'
 
@@ -19,6 +20,10 @@ class PinnedBookmarks extends LitElement {
     this.shouldShow = false
     this.bookmarks = []
     this.load()
+    window.addEventListener('focus', _debounce(() => {
+      // load latest when we're opened, to make sure we stay in sync
+      this.load()
+    }, 1e3, {leading: true}))
   }
 
   async load () {
@@ -33,7 +38,7 @@ class PinnedBookmarks extends LitElement {
   // =
 
   render() {
-    if (!this.shouldShow) {
+    if (!this.shouldShow || !this.bookmarks || this.bookmarks.length === 0) {
       return html`<div></div>`
     }
     return html`
