@@ -39,7 +39,7 @@ h2 button:hover {
   background: #eee;
 }
 
-.pinned-bookmark.sortable-ghost {
+.pinned-bookmark.drag-hover {
   outline: 3px dashed #ccc;
 }
 

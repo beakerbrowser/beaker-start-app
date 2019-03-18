@@ -1,4 +1,5 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
+import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { BeakerEditBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/edit-bookmark.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
@@ -19,6 +20,7 @@ class PinnedBookmarks extends LitElement {
     super()
     this.shouldShow = false
     this.bookmarks = []
+    this.draggedBookmark = null
     this.load()
     window.addEventListener('focus', _debounce(() => {
       // load latest when we're opened, to make sure we stay in sync
@@ -30,8 +32,6 @@ class PinnedBookmarks extends LitElement {
     this.shouldShow = (await beaker.browser.getSetting('start_section_hide_pinned_bookmarks')) !== 1
     this.bookmarks = await bookmarks.list({filters: {pinned: true}})
     this.bookmarks.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)
-    await this.updateComplete
-    this.addSortable()
   }
 
   // rendering
@@ -50,8 +50,16 @@ class PinnedBookmarks extends LitElement {
           <button @click=${this.onClickManagerDropdown}><span class="fas fa-ellipsis-h"></span></button>
         </h2>
         <div class="pinned-bookmarks">
-          ${this.bookmarks.map(b => html`
-            <a class="pinned-bookmark" href=${b.href} @contextmenu=${e => this.onContextmenuPinnedBookmark(e, b)}>
+          ${repeat(this.bookmarks, b => b, b => html`
+            <a
+              class="pinned-bookmark"
+              href=${b.href}
+              @contextmenu=${e => this.onContextmenuPinnedBookmark(e, b)}
+              @dragstart=${e => this.onDragstart(e, b)}
+              @dragover=${e => this.onDragover(e, b)}
+              @dragleave=${e => this.onDragleave(e, b)}
+              @drop=${e => this.onDrop(e, b)}
+            >
               <img src=${'beaker-favicon:64,' + b.href} class="favicon"/>
               <div class="title">${b.title}</div>
             </a>
@@ -150,27 +158,51 @@ class PinnedBookmarks extends LitElement {
     toast.create('Section removed', '', 10e3, {label: 'Undo', click: undo})
   }
 
-  // util
-  // =
+  onDragstart (e, draggedBookmark) {
+    this.draggedBookmark = draggedBookmark
+    e.dataTransfer.effectAllowed = 'move'
+  }
 
-  addSortable () {
-    new Sortable(this.shadowRoot.querySelector('.pinned-bookmarks'), {
-      group: 'pinned-bookmarks',
-      draggable: '.pinned-bookmark',
-      dataIdAttr: 'href',
-      forceFallback: true,
-      direction: 'horizontal',
-      store: {
-        get: () => {
-          return this.bookmarks.map(b => b.href)
-        },
-        set: async (sortable) => {
-          var pins = sortable.toArray()
-          await bookmarks.configure({pins})
-          this.load()
-        }
-      }
-    })
+  onDragover (e, b) {
+    if (e.dataTransfer.files.length) {
+      return // allow toplevel event-handler to handle
+    }
+    e.preventDefault()
+
+    e.currentTarget.classList.add('drag-hover')
+    e.dataTransfer.dropEffect = 'move'
+    return false
+  }
+
+  onDragleave (e, b) {
+    e.currentTarget.classList.remove('drag-hover')
+  }
+
+  onDrop (e, dropTargetBookmark) {
+    if (e.dataTransfer.files.length) {
+      return // allow toplevel event-handler to handle
+    }
+    e.stopPropagation()
+    e.currentTarget.classList.remove('drag-hover')
+
+    if (this.draggedBookmark !== this.dropTargetBookmark) {
+      var dropIndex = this.bookmarks.indexOf(dropTargetBookmark)
+      var draggedIndex = this.bookmarks.indexOf(this.draggedBookmark)
+      
+      // remove the dragged bookmark
+      this.bookmarks.splice(draggedIndex, 1)
+
+      // ...and reinsert it in front of the drop target
+      this.bookmarks.splice(dropIndex, 0, this.draggedBookmark)
+
+      // save new order
+      bookmarks.configure({pins: this.bookmarks.map(b => b.href)})
+    }
+
+    // rerender
+    this.requestUpdate()
+    this.draggedBookmark = null
+    return false
   }
 }
 
