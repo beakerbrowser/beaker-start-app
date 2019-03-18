@@ -36,19 +36,19 @@ class Applications extends LitElement {
           <button @click=${this.onClickManagerDropdown}><span class="fas fa-ellipsis-h"></span></button>
         </h2>
         <div class="applications">
-          <a class="application" href="beaker://bookmarks">
+          <a class="application" href="beaker://bookmarks" @contextmenu=${this.onContextmenuApplication}>
             <img class="favicon" src="beaker-favicon:64,beaker://bookmarks">
             <div class="title">Bookmarks</div>
           </a>
-          <a class="application" href="beaker://library">
+          <a class="application" href="beaker://library" @contextmenu=${this.onContextmenuApplication}>
             <img class="favicon" src="beaker-favicon:64,beaker://library">
             <div class="title">Library</div>
           </a>
-          <a class="application" href="beaker://search">
+          <a class="application" href="beaker://search" @contextmenu=${this.onContextmenuApplication}>
             <img class="favicon" src="beaker-favicon:64,beaker://search">
             <div class="title">Search</div>
           </a>
-          <a class="application" href="dat://beaker.social">
+          <a class="application" href="dat://beaker.social" @contextmenu=${this.onContextmenuApplication}>
             <img class="favicon" src="beaker-favicon:64,dat://beaker.social">
             <div class="title">Beaker.Social</div>
           </a>
@@ -73,6 +73,16 @@ class Applications extends LitElement {
       style: 'padding: 4px 0;',
       fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'
     })
+  }
+
+  async onContextmenuApplication (e) {
+    e.preventDefault()
+    var url = e.currentTarget.getAttribute('href')
+    const items = [
+      {icon: 'fa fa-external-link-alt', label: 'Open Link in New Tab', click: () => window.open(url)},
+      {icon: 'fa fa-link', label: 'Copy Link Address', click: () => writeToClipboard(url)}
+    ]
+    await contextMenu.create({x: e.clientX, y: e.clientY, items, fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'})
   }
 
   async onRemoveSection () {
