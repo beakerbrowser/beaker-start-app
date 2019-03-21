@@ -33,7 +33,7 @@ class Applications extends LitElement {
         <h2>
           <span class="far fa-window-maximize"></span>
           Applications
-          <button @click=${this.onClickManagerDropdown}><span class="fas fa-ellipsis-h"></span></button>
+          <button @click=${this.onClickManagerDropdown}><span class="fas fa-chevron-down"></span></button>
         </h2>
         <div class="applications">
           <a class="application" href="beaker://bookmarks" @contextmenu=${this.onContextmenuApplication}>
@@ -63,9 +63,8 @@ class Applications extends LitElement {
   onClickManagerDropdown (e) {
     e.stopPropagation()
     contextMenu.create({
-      x: e.currentTarget.getBoundingClientRect().right,
+      x: e.currentTarget.getBoundingClientRect().left,
       y: e.currentTarget.getBoundingClientRect().bottom,
-      right: true,
       noBorders: true,
       items: [
         {icon: 'fas fa-times', label: 'Remove section', click: () => this.onRemoveSection()}

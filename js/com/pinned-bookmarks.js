@@ -47,7 +47,7 @@ class PinnedBookmarks extends LitElement {
         <h2>
           <span class="fas fa-thumbtack"></span>
           Pinned Bookmarks
-          <button @click=${this.onClickManagerDropdown}><span class="fas fa-ellipsis-h"></span></button>
+          <button @click=${this.onClickManagerDropdown}><span class="fas fa-chevron-down"></span></button>
         </h2>
         <div class="pinned-bookmarks">
           ${repeat(this.bookmarks, b => b, b => html`
@@ -75,9 +75,8 @@ class PinnedBookmarks extends LitElement {
   onClickManagerDropdown (e) {
     e.stopPropagation()
     contextMenu.create({
-      x: e.currentTarget.getBoundingClientRect().right,
+      x: e.currentTarget.getBoundingClientRect().left,
       y: e.currentTarget.getBoundingClientRect().bottom,
-      right: true,
       noBorders: true,
       items: [
         {icon: 'fas fa-bookmark', label: 'Add a bookmark', click: () => this.onAddBookmark()},
@@ -108,6 +107,8 @@ class PinnedBookmarks extends LitElement {
         title: '',
         tags: [],
         pinned: true
+      }, {
+        fontawesomeSrc: '/vendor/beaker-app-stdlib/css/fontawesome.css'
       })
       
       // make update

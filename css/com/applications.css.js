@@ -6,13 +6,14 @@ ${commonCSS}
 
 h2 {
   font-size: 11px;
-  color: rgba(0,0,0,.75);
+  color: rgba(0,0,0,.5);
+  font-weight: 500;
 }
 
 h2 button {
   outline: 0;
   cursor: pointer;
-  float: right;
+  color: inherit;
 }
 
 h2 button:hover {
