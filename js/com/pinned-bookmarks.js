@@ -124,7 +124,9 @@ class PinnedBookmarks extends LitElement {
   async onEditBookmark (originalBookmark) {
     try {
       // render popup
-      var b = await BeakerEditBookmarkPopup.create(originalBookmark)
+      var b = await BeakerEditBookmarkPopup.create(originalBookmark, {
+        fontawesomeSrc: '/vendor/beaker-app-stdlib/css/fontawesome.css'
+      })
       
       // make update
       await bookmarks.edit(originalBookmark.href, b)
