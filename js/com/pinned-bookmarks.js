@@ -2,6 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { BeakerEditBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/edit-bookmark.js'
+import { BeakerExplorerPopup } from '/vendor/beaker-app-stdlib/js/com/popups/explorer.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
@@ -11,14 +12,12 @@ import pinnedBookmarksCSS from '../../css/com/pinned-bookmarks.css.js'
 class PinnedBookmarks extends LitElement {
   static get properties() {
     return {
-      shouldShow: {type: Boolean},
       bookmarks: {type: Array}
     }
   }
 
   constructor () {
     super()
-    this.shouldShow = false
     this.bookmarks = []
     this.draggedBookmark = null
     this.load()
@@ -29,7 +28,6 @@ class PinnedBookmarks extends LitElement {
   }
 
   async load () {
-    this.shouldShow = (await beaker.browser.getSetting('start_section_hide_pinned_bookmarks')) !== 1
     this.bookmarks = await bookmarks.query({filters: {pinned: true}})
     this.bookmarks.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)
   }
@@ -38,7 +36,7 @@ class PinnedBookmarks extends LitElement {
   // =
 
   render() {
-    if (!this.shouldShow || !this.bookmarks || this.bookmarks.length === 0) {
+    if (!this.bookmarks) {
       return html`<div></div>`
     }
     return html`
@@ -59,6 +57,9 @@ class PinnedBookmarks extends LitElement {
               <div class="title">${b.title}</div>
             </a>
           `)}
+          <a class="pinned-bookmark explorer-pin" href="#" @click=${this.onClickExplorer}>
+            <i class="fa fa-ellipsis-h"></i>
+          </a>
         </div>
       </div>
     `
@@ -143,18 +144,6 @@ class PinnedBookmarks extends LitElement {
     toast.create('Bookmark deleted', '', 10e3, {label: 'Undo', click: undo})
   }
 
-  async onRemoveSection () {
-    await beaker.browser.setSetting('start_section_hide_pinned_bookmarks', 1)
-    this.shouldShow = false
-
-    const undo = async () => {
-      await beaker.browser.setSetting('start_section_hide_pinned_bookmarks', 0)
-      this.shouldShow = true
-    }
-
-    toast.create('Section removed', '', 10e3, {label: 'Undo', click: undo})
-  }
-
   onDragstart (e, draggedBookmark) {
     this.draggedBookmark = draggedBookmark
     e.dataTransfer.effectAllowed = 'move'
@@ -200,6 +189,15 @@ class PinnedBookmarks extends LitElement {
     this.requestUpdate()
     this.draggedBookmark = null
     return false
+  }
+
+  async onClickExplorer (e) {
+    e.preventDefault()
+    try { await BeakerExplorerPopup.create() }
+    catch (e) { /*ignore*/ }
+  
+    // reload bookmarks in case any pins were added
+    this.load()
   }
 }
 

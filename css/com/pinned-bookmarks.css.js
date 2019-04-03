@@ -44,6 +44,20 @@ ${commonCSS}
   margin-top: 10px;
 }
 
+.explorer-pin {
+  outline: 0;
+  background: none;
+}
+
+.explorer-pin:hover {
+  background: #eee;
+  outline: 0;
+}
+
+.explorer-pin i {
+  color: rgba(0,0,0,.15);
+}
+
 @media (min-width: 640px) {
   .pinned-bookmarks-container .pinned-bookmarks {
     grid-template-columns: repeat(4, 1fr);
