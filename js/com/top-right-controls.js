@@ -58,7 +58,7 @@ class TopRightControls extends LitElement {
       <div>
         <a @click=${this.onClickNewMenu} style="font-size: 14px; font-weight: 500; line-height: 14px;">New <i class="fas fa-caret-down"></i></a>
         <a href="beaker://settings"><span class="fas fa-cog"></span></a>
-        <a @click=${this.onClickProfileMenu} class="profile"><span>${this.userName}</span>${this.userImg}</a>
+        <a @click=${this.onClickProfileMenu} class="profile">${this.userImg}<i class="fas fa-caret-down"></i></a>
       </div>`
   }
 
@@ -68,7 +68,7 @@ class TopRightControls extends LitElement {
 
     const goto = (url) => { window.location = url }
     const items = [
-      {icon: false, label: 'Website', click: () => goto('beaker://library/?new')}
+      {icon: false, label: 'Website', click: () => goto('beaker://library/?view=new-website')}
     ]
     createContextMenu(e.currentTarget, items)
   }
@@ -78,23 +78,14 @@ class TopRightControls extends LitElement {
     e.stopPropagation()
 
     const goto = (url) => { window.location = url }
-    const editProfile = async () => {
-      this.user = await BeakerEditProfile.runFlow(profiles)
-    }
-    const editThumb = async () => {
-      await BeakerEditThumb.runFlow(profiles)
-      this.cacheBuster = Date.now()
-    }
     const items = [
-      {icon: 'fas fa-fw fa-external-link-alt', label: 'View your website', click: () => goto(this.userUrl)},
+      {icon: false, label: 'Your profile site', click: () => goto(this.userUrl)},
       '-',
-      html`<div class="section-header small light">Social</div>`,
-      {icon: 'fas fa-fw fa-user', label: 'Your social profile', click: () => goto(`intent:unwalled.garden/view-profile?url=${encodeURIComponent(this.userUrl)}`)},
-      {icon: 'fas fa-fw fa-rss', label: 'Followed sites', click: () => goto('beaker://library/?category=following')},
+      {icon: false, label: 'Your address book', click: () => goto('beaker://library/?view=addressbook')},
+      {icon: false, label: 'Your bookmarks', click: () => goto('beaker://library/?view=bookmarks')},
+      {icon: false, label: 'Your websites', click: () => goto('beaker://library/?view=websites')},
       '-',
-      html`<div class="section-header small light">Settings</div>`,
-      {icon: false, label: 'Edit your profile', click: editProfile},
-      {icon: false, label: 'Change your photo', click: editThumb},
+      {icon: false, label: 'Settings', click: () => goto('beaker://settings/')}
     ]
     createContextMenu(e.currentTarget, items)
   }
@@ -123,14 +114,10 @@ a:hover {
 .profile {
   display: inline-flex;
   align-items: center;
-  background: #fff;
   font-size: 13px;
   border-radius: 2px;
   padding: 3px 6px;
-  margin-left: 10px;
-  color: #333;
-  border: 1px solid #ccc;
-  text-decoration: none;
+
 }
 
 .profile:hover {
@@ -138,19 +125,12 @@ a:hover {
   background: #eee;
 }
 
-.profile span {
-  margin: 0 12px 0 4px;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .profile img {
   width: 32px;
   height: 32px;
   object-fit: cover;
   border-radius: 50%;
+  margin-right: 5px;
 }
 `
 
