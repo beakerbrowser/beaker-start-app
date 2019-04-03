@@ -44,11 +44,6 @@ class PinnedBookmarks extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="pinned-bookmarks-container">
-        <h2>
-          <span class="fas fa-thumbtack"></span>
-          Pinned Bookmarks
-          <button @click=${this.onClickManagerDropdown}><span class="fas fa-chevron-down"></span></button>
-        </h2>
         <div class="pinned-bookmarks">
           ${repeat(this.bookmarks, b => b, b => html`
             <a
@@ -118,7 +113,6 @@ class PinnedBookmarks extends LitElement {
       // ignore
       console.log(e)
     }
-
   }
 
   async onEditBookmark (originalBookmark) {

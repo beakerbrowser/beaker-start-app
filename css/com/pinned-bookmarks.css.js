@@ -4,21 +4,6 @@ import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 const cssStr = css`
 ${commonCSS}
 
-h2 {
-  font-size: 11px;
-  color: rgba(0,0,0,.5);
-  font-weight: 500;
-}
-
-h2 button {
-  outline: 0;
-  cursor: pointer;
-  color: inherit;
-}
-
-h2 button:hover {
-  background: #eee;
-}
 
 .pinned-bookmarks {
   display: grid;
