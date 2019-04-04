@@ -5,6 +5,8 @@ import {BeakerEditProfile} from '/vendor/beaker-app-stdlib/js/com/popups/edit-pr
 import {BeakerEditThumb} from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
 import _debounce from '/vendor/lodash.debounce.js'
 
+const JS_CONSOLE_URL = 'dat://2145f6c240076df9f1eb1146ef21571e5d680b58a6568a5a989b1488a410aa4c'
+
 const createContextMenu = (el, items) => contextMenu.create({
   x: el.getBoundingClientRect().right,
   y: el.getBoundingClientRect().bottom,
@@ -67,8 +69,16 @@ class TopRightControls extends LitElement {
     e.stopPropagation()
 
     const goto = (url) => { window.location = url }
+    async function create (templateUrl, title, description) {
+      var newSite = await DatArchive.fork(templateUrl, {title, description, prompt: false})
+      window.location = newSite.url
+    }
     const items = [
-      {icon: false, label: 'Website', click: () => goto('beaker://library/?view=new-website')}
+      html`<div class="section-header small light">Website</div>`,
+      {icon: false, label: 'Empty project', click: () => goto('beaker://library/?view=new-website')},
+      '-',
+      html`<div class="section-header small light">Site templates</div>`,
+      {icon: 'fas fa-terminal', label: 'JS Console Session', click: () => create(JS_CONSOLE_URL, `JS Console Session (${(new Date()).toLocaleDateString()})`)}
     ]
     createContextMenu(e.currentTarget, items)
   }
