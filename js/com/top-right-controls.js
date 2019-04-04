@@ -117,7 +117,7 @@ a:hover {
   font-size: 13px;
   border-radius: 2px;
   padding: 3px 6px;
-
+  margin-left: 5px;
 }
 
 .profile:hover {
