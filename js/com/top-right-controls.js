@@ -1,12 +1,11 @@
 import {LitElement, html, css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import {profiles} from '../tmp-beaker.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
-import {BeakerEditProfile} from '/vendor/beaker-app-stdlib/js/com/popups/edit-profile.js'
-import {BeakerEditThumb} from '/vendor/beaker-app-stdlib/js/com/popups/edit-thumb.js'
+import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import _debounce from '/vendor/lodash.debounce.js'
 
-const PASTEDAT_URL = 'dat://9056aa61e80e4a1d16c0ac651049dc906fe0ebb6be13aa356df9e81fbce05c77/'
-const PHOTOALBUM_URL = 'dat://911c291505c8dd262b099880a858cfe9f9971e39a1118cef3b3a529a3ec7548e/'
+const PASTEDAT_KEY = '9056aa61e80e4a1d16c0ac651049dc906fe0ebb6be13aa356df9e81fbce05c77'
+const PHOTOALBUM_KEY = '911c291505c8dd262b099880a858cfe9f9971e39a1118cef3b3a529a3ec7548e'
 
 const createContextMenu = (el, items) => contextMenu.create({
   x: el.getBoundingClientRect().right,
@@ -71,18 +70,33 @@ class TopRightControls extends LitElement {
 
     const goto = (url) => { window.location = url }
     async function create (templateUrl, title, description) {
-      var newSite = await DatArchive.fork(templateUrl, {title, description, prompt: false})
-      window.location = newSite.url
+      toast.create('Loading...', '', 10e3)
+      setTimeout(() => toast.create('Still loading...', '', 10e3), 10e3)
+      setTimeout(() => toast.create('Still loading, must be having trouble downloading the template...', '', 10e3), 20e3)
+      setTimeout(() => toast.create('Okay wow...', '', 10e3), 30e3)
+      setTimeout(() => toast.create('Still loading, is your Internet connected?...', '', 10e3), 40e3)
+      setTimeout(() => toast.create('Lets give it 10 more seconds...', '', 10e3), 50e3)
+      try {
+        var newSite = await DatArchive.fork(templateUrl, {title, description, prompt: false})
+        window.location = newSite.url
+      } catch (e) {
+        console.error(e)
+        if (e.name === 'TimeoutError') {
+          toast.create('I give up. Beaker was unable to download the template for your new site. Please check your Internet connection and try again!', 'error')
+        } else {
+          toast.create('Unexpected error: ' + e.message, 'error')
+        }
+      }
     }
     const items = [
       html`<div class="section-header small light">Projects</div>`,
       {icon: false, label: 'Blank website', click: () => goto('beaker://library/?view=new-website')},
       '-',
       html`<div class="section-header small light">Tools</div>`,
-      {icon: false, label: 'PasteDat', click: () => create(PASTEDAT_URL, 'New PasteDat')},
+      {icon: false, label: 'PasteDat', click: () => create(PASTEDAT_KEY, 'New PasteDat')},
       '-',
       html`<div class="section-header small light">Media</div>`,
-      {icon: false, label: 'Photo album', click: () => create(PHOTOALBUM_URL, `Photo Album (${(new Date()).toLocaleDateString()})`)}
+      {icon: false, label: 'Photo album', click: () => create(PHOTOALBUM_KEY, `Photo Album (${(new Date()).toLocaleDateString()})`)}
     ]
     createContextMenu(e.currentTarget, items)
   }
