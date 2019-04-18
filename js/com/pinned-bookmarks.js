@@ -2,7 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { BeakerEditBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/edit-bookmark.js'
-import { BeakerExplorerPopup } from '/vendor/beaker-app-stdlib/js/com/popups/explorer.js'
+import { AddPinnedBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/add-pinned-bookmark.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
@@ -57,8 +57,8 @@ class PinnedBookmarks extends LitElement {
               <div class="title">${b.title}</div>
             </a>
           `)}
-          <a class="pinned-bookmark explorer-pin" href="#" @click=${this.onClickExplorer}>
-            <i class="fa fa-ellipsis-h"></i>
+          <a class="pinned-bookmark explorer-pin" href="#" @click=${this.onClickAdd}>
+            <i class="fas fa-thumbtack"></i>
           </a>
         </div>
       </div>
@@ -90,7 +90,7 @@ class PinnedBookmarks extends LitElement {
       {icon: 'fa fa-external-link-alt', label: 'Open Link in New Tab', click: () => window.open(bookmark.href)},
       {icon: 'fa fa-link', label: 'Copy Link Address', click: () => writeToClipboard(bookmark.href)},
       {icon: 'fa fa-pencil-alt', label: 'Edit', click: () => this.onEditBookmark(bookmark)},
-      {icon: 'fa fa-trash', label: 'Delete', click: () => this.onDeleteBookmark(bookmark)}
+      {icon: 'fa fa-times', label: 'Unpin', click: () => this.onUnpinBookmark(bookmark)}
     ]
     await contextMenu.create({x: e.clientX, y: e.clientY, items, fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'})
   }
@@ -132,16 +132,16 @@ class PinnedBookmarks extends LitElement {
     }
   }
 
-  async onDeleteBookmark (bookmark) {
-    await bookmarks.remove(bookmark.href)
+  async onUnpinBookmark (bookmark) {
+    await bookmarks.edit(bookmark.href, {pinned: false})
     await this.load()
 
     const undo = async () => {
-      await bookmarks.add(bookmark)
+      await bookmarks.edit(bookmark.href, {pinned: true})
       await this.load()
     }
 
-    toast.create('Bookmark deleted', '', 10e3, {label: 'Undo', click: undo})
+    toast.create('Bookmark unpinned', '', 10e3, {label: 'Undo', click: undo})
   }
 
   onDragstart (e, draggedBookmark) {
@@ -191,9 +191,9 @@ class PinnedBookmarks extends LitElement {
     return false
   }
 
-  async onClickExplorer (e) {
+  async onClickAdd (e) {
     e.preventDefault()
-    try { await BeakerExplorerPopup.create() }
+    try { await AddPinnedBookmarkPopup.create() }
     catch (e) { /*ignore*/ }
   
     // reload bookmarks in case any pins were added

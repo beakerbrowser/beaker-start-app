@@ -3,11 +3,13 @@
 
 body {
   font-size: 13px;
+  background: #f5f5f7;
+  --border-color: #d4d7dc;
 }
 
 .start-wrapper {
   width: 460px;
-  margin: 120px auto;
+  margin: 20vh auto;
 }
 
 beaker-app-header-search {

@@ -4,7 +4,6 @@ import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 const cssStr = css`
 ${commonCSS}
 
-
 .pinned-bookmarks {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -16,17 +15,17 @@ ${commonCSS}
 .pinned-bookmark {
   background: #fff;
   text-align: center;
-  outline: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   height: 120px;
+  border-radius: 2px;
 }
 
 .pinned-bookmark:hover {
-  outline: 1px solid #ccc;
-  background: #eee;
+  background: #eeeef1;
 }
 
 .pinned-bookmark.drag-hover {
-  outline: 3px dashed #ccc;
+  outline: 3px dashed var(--border-color);
 }
 
 .pinned-bookmark .favicon {
@@ -45,13 +44,8 @@ ${commonCSS}
 }
 
 .explorer-pin {
-  outline: 0;
+  border: 0;
   background: none;
-}
-
-.explorer-pin:hover {
-  background: #eee;
-  outline: 0;
 }
 
 .explorer-pin i {
