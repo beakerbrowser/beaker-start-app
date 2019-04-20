@@ -53,7 +53,7 @@ class PinnedBookmarks extends LitElement {
               @dragleave=${e => this.onDragleave(e, b)}
               @drop=${e => this.onDrop(e, b)}
             >
-              <img src=${'beaker-favicon:64,' + b.href} class="favicon"/>
+              <img src=${'asset:favicon-32:' + b.href} class="favicon"/>
               <div class="title">${b.title}</div>
             </a>
           `)}
