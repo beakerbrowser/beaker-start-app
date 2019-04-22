@@ -49,7 +49,7 @@ ${commonCSS}
 }
 
 .explorer-pin i {
-  color: rgba(0,0,0,.15);
+  color: rgba(0,0,0,.075);
 }
 
 @media (min-width: 640px) {
