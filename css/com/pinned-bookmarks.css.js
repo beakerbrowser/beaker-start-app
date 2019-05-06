@@ -17,7 +17,7 @@ ${commonCSS}
   text-align: center;
   border: 1px solid var(--border-color);
   height: 120px;
-  border-radius: 2px;
+  border-radius: 16px;
 }
 
 .pinned-bookmark:hover {

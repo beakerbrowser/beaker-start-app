@@ -4,7 +4,7 @@ class BeakerBlueNotice extends LitElement {
   render() {
     return html`
       <div>
-        <span>Blue alpha</span><br>
+        <span>Blue Alpha</span><br>
         This build is <strong>not ready</strong> for public use.
       </div>`
   }

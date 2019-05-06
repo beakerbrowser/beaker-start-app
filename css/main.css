@@ -3,7 +3,7 @@
 
 body {
   font-size: 13px;
-  background: #f5f5f7;
+  background: #fff;
   --border-color: #d4d7dc;
 }
 
@@ -12,10 +12,14 @@ body {
   margin: 20vh auto;
 }
 
-beaker-app-header-search {
-  margin: 0 auto 80px;
-  display: block;
-  width: 600px;
+beaker-library-app-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+  width: 54px;
+  background: rgb(240, 240, 243);
 }
 
 start-pinned-bookmarks,

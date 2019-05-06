@@ -58,7 +58,7 @@ class PinnedBookmarks extends LitElement {
             </a>
           `)}
           <a class="pinned-bookmark explorer-pin" href="#" @click=${this.onClickAdd}>
-            <i class="fas fa-thumbtack"></i>
+            <i class="fas fa-plus"></i>
           </a>
         </div>
       </div>
