@@ -4,7 +4,7 @@ import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 const cssStr = css`
 ${commonCSS}
 
-.pinned-bookmarks {
+.grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px;
@@ -13,28 +13,28 @@ ${commonCSS}
   margin: 5px 0;
 }
 
-.pinned-bookmark {
+.item {
   background: #fff;
   text-align: center;
   height: 120px;
   border-radius: 16px;
 }
 
-.pinned-bookmark:hover {
+.item:hover {
   background: rgb(245, 247, 249);
 }
 
-.pinned-bookmark.drag-hover {
+.item.drag-hover {
   outline: 3px dashed var(--border-color);
 }
 
-.pinned-bookmark .favicon {
+.item .favicon {
   margin-top: 30px;
   width: 32px;
   height: 32px;
 }
 
-.pinned-bookmark .title {
+.item .title {
   text-overflow: ellipsis;
   color: #34495e;
   font-size: 12px;
@@ -49,30 +49,30 @@ ${commonCSS}
 }
 
 .explorer-pin i {
-  color: rgb(222, 228, 232);
+  color: rgba(0,0,0,.075);
 }
 
 @media (min-width: 640px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .grid-container .grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media (min-width: 740px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .grid-container .grid {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
 @media (min-width: 900px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .grid-container .grid {
     grid-template-columns: repeat(6, 1fr);
   }
 }
 
-.pinned-bookmarks-container .pinned-bookmark.explorer-pin i {
-  font-size: 27px;
-  margin-top: 44px;
+.grid-container .item.explorer-pin i {
+  font-size: 45px;
+  margin-top: 38px;
 }
 `
 export default cssStr
