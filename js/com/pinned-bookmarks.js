@@ -25,12 +25,13 @@ class PinnedBookmarks extends LitElement {
     window.addEventListener('focus', _debounce(() => {
       // load latest when we're opened, to make sure we stay in sync
       this.load()
-    }, 1e3, {leading: true}))
+    }, 500))
   }
 
   async load () {
-    this.bookmarks = await bookmarks.query({filters: {pinned: true}})
-    this.bookmarks.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)
+    var bs = await bookmarks.query({filters: {pinned: true}})
+    bs.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)
+    this.bookmarks = bs
   }
 
   // rendering
