@@ -20,6 +20,7 @@ class PinnedBookmarks extends LitElement {
     super()
     this.bookmarks = []
     this.draggedBookmark = null
+    this.dragStartTime = 0
     this.load()
     window.addEventListener('focus', _debounce(() => {
       // load latest when we're opened, to make sure we stay in sync
@@ -146,6 +147,7 @@ class PinnedBookmarks extends LitElement {
 
   onDragstart (e, draggedBookmark) {
     this.draggedBookmark = draggedBookmark
+    this.dragStartTime = Date.now()
     e.dataTransfer.effectAllowed = 'move'
   }
 
@@ -171,7 +173,7 @@ class PinnedBookmarks extends LitElement {
     e.stopPropagation()
     e.currentTarget.classList.remove('drag-hover')
 
-    if (this.draggedBookmark !== this.dropTargetBookmark) {
+    if (this.draggedBookmark !== dropTargetBookmark) {
       var dropIndex = this.bookmarks.indexOf(dropTargetBookmark)
       var draggedIndex = this.bookmarks.indexOf(this.draggedBookmark)
       
@@ -183,6 +185,10 @@ class PinnedBookmarks extends LitElement {
 
       // save new order
       bookmarks.configure({pins: this.bookmarks.map(b => b.href)})
+    } else if (Date.now() - this.dragStartTime < 100) {
+      // this was probably a click that was misinterpretted as a drag
+      // manually "click"
+      window.location = this.draggedBookmark.href
     }
 
     // rerender
