@@ -69,22 +69,6 @@ class PinnedBookmarks extends LitElement {
   // events
   // =
 
-  onClickManagerDropdown (e) {
-    e.stopPropagation()
-    contextMenu.create({
-      x: e.currentTarget.getBoundingClientRect().left,
-      y: e.currentTarget.getBoundingClientRect().bottom,
-      noBorders: true,
-      items: [
-        {icon: 'fas fa-bookmark', label: 'Add a bookmark', click: () => this.onAddBookmark()},
-        '-',
-        {icon: 'fas fa-times', label: 'Remove section', click: () => this.onRemoveSection()}
-      ],
-      style: 'padding: 4px 0;',
-      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'
-    })
-  }
-
   async onContextmenuPinnedBookmark (e, bookmark) {
     e.preventDefault()
     const items = [
@@ -197,8 +181,12 @@ class PinnedBookmarks extends LitElement {
     return false
   }
 
-  async onClickAdd (e) {
+  onClickAdd (e) {
     e.preventDefault()
+    this.addPin()
+  }
+
+  async addPin () {
     try { await AddPinnedBookmarkPopup.create() }
     catch (e) { /*ignore*/ }
   

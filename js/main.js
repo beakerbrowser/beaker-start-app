@@ -4,6 +4,7 @@ import './com/links-grid.js'
 import { LitElement, html, css } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import * as cloudMenu from './com/cloud-menu.js'
+import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import buttonsCSS from '/vendor/beaker-app-stdlib/css/buttons2.css.js'
 import spinnerCSS from '/vendor/beaker-app-stdlib/css/com/spinner.css.js'
 
@@ -41,7 +42,9 @@ export class StartApp extends LitElement {
       if (this.didGesture && absX < 10) {
         this.didGesture = false
       }
-    })    
+    })
+
+    document.addEventListener('contextmenu', e => this.onContextmenuPage(e), {capture: true})
   }
 
   async load () {
@@ -93,6 +96,12 @@ export class StartApp extends LitElement {
   // events
   // =
 
+  updated () {
+    if (this.view === 'bookmarks') {
+      this.shadowRoot.querySelector('start-pinned-bookmarks').load()
+    }
+  }
+
   async onClickCloud (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -101,6 +110,14 @@ export class StartApp extends LitElement {
     el.classList.add('active')
     await cloudMenu.create()
     el.classList.remove('active')
+  }
+
+  async onContextmenuPage (e, item) {
+    e.preventDefault()
+    const items = [
+      {icon: 'fas fa-thumbtack', label: 'New Pin', click: () => this.shadowRoot.querySelector('start-pinned-bookmarks').addPin()}
+    ]
+    await contextMenu.create({x: e.clientX, y: e.clientY, items, fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'})
   }
 }
 StartApp.styles = [buttonsCSS, spinnerCSS, css`

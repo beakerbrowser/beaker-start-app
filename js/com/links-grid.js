@@ -4,6 +4,8 @@ import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import linksGridCSS from '../../css/com/links-grid.css.js'
 
+export const bookmarks = navigator.importSystemAPI('bookmarks')
+
 class LinksGrid extends LitElement {
   static get properties() {
     return {
@@ -48,10 +50,30 @@ class LinksGrid extends LitElement {
   async onContextmenuItem (e, item) {
     e.preventDefault()
     const items = [
-      {icon: 'fa fa-external-link-alt', label: 'Open Link in New Tab', click: () => window.open(item.href)},
-      {icon: 'fa fa-link', label: 'Copy Link Address', click: () => writeToClipboard(item.href)}
+      {icon: 'fa fa-external-link-alt', label: 'Open Link in New Tab', click: () => window.open(item.url)},
+      {icon: 'fa fa-link', label: 'Copy Link Address', click: () => writeToClipboard(item.url)},
+      {icon: 'fas fa-thumbtack', label: 'Pin to Start Page', click: () => this.pin(item)}
     ]
     await contextMenu.create({x: e.clientX, y: e.clientY, items, fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css'})
+  }
+
+  // helpers
+  // =
+
+  async pin (item) {
+    var bookmark = await bookmarks.get(item.url)
+    if (bookmark) {
+      if (bookmark.pinned) return
+      bookmark.pinned = true
+      await bookmarks.edit(bookmark.href, bookmark)
+    } else {
+      await bookmarks.add({
+        href: item.url,
+        title: item.title,
+        description: item.description,
+        pinned: true
+      })
+    }
   }
 }
 
