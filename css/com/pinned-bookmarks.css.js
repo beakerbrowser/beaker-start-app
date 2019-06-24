@@ -4,6 +4,10 @@ import commonCSS from '/vendor/beaker-app-stdlib/css/common.css.js'
 const cssStr = css`
 ${commonCSS}
 
+:host {
+  display: block;
+}
+
 .pinned-bookmarks {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

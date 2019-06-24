@@ -59,7 +59,11 @@ class CloudMenu extends LitElement {
 
   renderListingView () {
     return html`
-      <div class="menu-heading">Remotes</div>
+      <div class="menu-heading">Peer-to-peer network</div>
+      <div class="beaker-cloud-nav">
+        <a class="active" href="#" @click=${this.setViewCb('Listing')}>Remotes</a>
+        <span></span>
+      </div>
       <p class="about">
         "Remotes" keep your data online when your computer is off.
       </p>
