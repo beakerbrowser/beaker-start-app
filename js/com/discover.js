@@ -16,6 +16,7 @@ const profiles = navigator.importSystemAPI('profiles')
 const bookmarks = navigator.importSystemAPI('bookmarks')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 const media = navigator.importSystemAPI('unwalled-garden-media')
+const tagsAPI = navigator.importSystemAPI('unwalled-garden-tags')
 
 const STANDARD_SORT_OPTIONS = {
   recent: 'Latest',
@@ -60,6 +61,7 @@ class Network extends LitElement {
     this.currentSort = QP.getParam('sort', 'recent')
     this.currentSourceTitle = '' // used when currentSource != network
     this.items = []
+    this.tags = []
     this.counts = {}
   }
 
@@ -92,6 +94,7 @@ class Network extends LitElement {
     // fetch content for this view
     if (this.currentView === 'bookmarks') {
       this.items = await bookmarks.query({filters: {authors, tags}})
+      this.tags = await tagsAPI.listBookmarkTags({filters: {authors}})
     } else if (this.currentView === 'follows') {
       let p = (await follows.list({filters: {authors}})).map(({topic}) => topic)
       // remove duplicates:
@@ -107,7 +110,9 @@ class Network extends LitElement {
     } else {
       let subtypes = `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}`
       this.items = (await media.list({filters: {authors, subtypes, tags}}))
+      this.tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
     }
+    this.tags.sort((a, b) => b.count - a.count)
 
     // TEMP sort in memory
     if (this.currentSort === 'alphabetical') {
@@ -199,7 +204,9 @@ class Network extends LitElement {
               current=${this.currentSource}
               @change=${this.onChangeSource}
             ></start-discover-sources>
-            ${this.currentView === 'follows' ? '' : html`<start-discover-tags .current=${this.currentTag} @change=${this.onChangeTag}></start-discover-tags>`}
+            ${this.currentView === 'follows'
+              ? ''
+              : html`<start-discover-tags .current=${this.currentTag} .list=${this.tags} @change=${this.onChangeTag}></start-discover-tags>`}
           </div>
         </div>
       </div>

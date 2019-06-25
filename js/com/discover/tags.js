@@ -4,23 +4,6 @@ import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/di
 import discoverTagsCSS from '../../../css/com/discover/tags.css.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
 
-const SUGGESTED_TAGS = [
-  'aww',
-  'funny',
-  'food',
-  'news',
-  'tech',
-  'gaming',
-  'interesting',
-  'movies',
-  'science',
-  'tv',
-  'culture',
-  'art',
-  'politics',
-  'nsfw'
-]
-
 class DiscoverTags extends LitElement {
   static get properties () {
     return {
@@ -34,26 +17,23 @@ class DiscoverTags extends LitElement {
 
     this.current = false
     this.list = []
-    this.load()
-  }
-
-  async load () {
-    // TODO
-    this.list = SUGGESTED_TAGS
   }
 
   // rendering
   // =
 
   render () {
-    const item = (tag) => {
+    console.log(this.list)
+    const item = (tagRecord) => {
       const cls = classMap({
         item: true,
-        current: tag === this.current || (!tag && !this.current)
+        current: tagRecord ? tagRecord.tag === this.current : !this.current
       })
       return html`
         <div>
-          <a class=${cls} title=${tag || 'All tags'} @click=${e => this.onClick(e, tag)}>${tag ? '#' + tag : 'All tags'}</a>
+          <a class=${cls} title=${tagRecord || 'All tags'} @click=${e => this.onClick(e, tagRecord ? tagRecord.tag : undefined)}>
+            ${tagRecord ? html`#${tagRecord.tag} <small>(${tagRecord.count})</small>` : 'All tags'}
+          </a>
         </div>
       `
     }
