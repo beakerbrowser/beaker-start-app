@@ -1,8 +1,7 @@
 import './com/blue-notice.js'
-import './com/pinned-bookmarks.js'
-import './com/feed.js'
-import './com/discover.js'
-import { profiles } from 'dat://unwalled.garden/index.js'
+import './views/pinned-bookmarks.js'
+import './views/feed.js'
+import './views/discover.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
@@ -11,6 +10,7 @@ import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import * as cloudMenu from './com/cloud-menu.js'
 import mainCSS from '../css/main.css.js'
 
+const profiles = navigator.importSystemAPI('profiles')
 
 const VIEWS = ['pins', 'feed', 'discover']
 

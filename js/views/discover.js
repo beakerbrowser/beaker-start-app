@@ -5,12 +5,12 @@ import { timeDifference } from '/vendor/beaker-app-stdlib/js/time.js'
 import { toNiceUrl, pluralize } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import * as QP from '../lib/query-params.js'
-import discoverCSS from '../../../css/com/discover.css.js'
+import discoverCSS from '../../../css/views/discover.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
-import './discover/nav.js'
-import './discover/sources.js'
-import './discover/tags.js'
-import './discover/filters.js'
+import '../com/discover/nav.js'
+import '../com/discover/sources.js'
+import '../com/discover/tags.js'
+import '../com/discover/filters.js'
 
 const profiles = navigator.importSystemAPI('profiles')
 const bookmarks = navigator.importSystemAPI('bookmarks')

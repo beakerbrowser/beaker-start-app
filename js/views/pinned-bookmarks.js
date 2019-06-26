@@ -7,7 +7,7 @@ import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
 import { bookmarks } from '../tmp-beaker.js'
-import pinnedBookmarksCSS from '../../css/com/pinned-bookmarks.css.js'
+import pinnedBookmarksCSS from '../../css/views/pinned-bookmarks.css.js'
 
 class PinnedBookmarks extends LitElement {
   static get properties() {

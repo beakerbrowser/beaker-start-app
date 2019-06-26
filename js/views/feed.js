@@ -1,6 +1,6 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import feedCSS from '../../../css/com/feed.css.js'
+import feedCSS from '../../../css/views/feed.css.js'
 import * as QP from '../lib/query-params.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
