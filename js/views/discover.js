@@ -63,6 +63,7 @@ class Network extends LitElement {
     this.currentSource = QP.getParam('source', 'network')
     this.currentSort = QP.getParam('sort', 'recent')
     this.currentSourceTitle = '' // used when currentSource != network
+    this.authors = []
     this.items = []
     this.tags = []
     this.counts = {}
@@ -96,6 +97,7 @@ class Network extends LitElement {
       authors = this.currentSource
       this.currentSourceTitle = (await profiles.get(authors)).title
     }
+    this.authors = authors
 
     // fetch content for this view
     var items = []
@@ -129,7 +131,7 @@ class Network extends LitElement {
         // -prf
         if (item.record) item.url = item.record.url
 
-        item.votes = await votes.tabulate(item.url)
+        item.votes = await votes.tabulate(item.url, {filters: {authors}})
         item.votes.karma = item.votes.upvotes - item.votes.downvotes
         item.votes.user = 0
         if (item.votes.upvoters.find(u => u.url === this.user.url)) {
@@ -407,7 +409,7 @@ class Network extends LitElement {
 
     // set vote, update, redraw
     await votes.set(item.url, vote)
-    item.votes = await votes.tabulate(item.url)
+    item.votes = await votes.tabulate(item.url, {filters: {authors: this.authors}})
     item.votes.karma = item.votes.upvotes - item.votes.downvotes
     item.votes.user = vote
     this.requestUpdate()
