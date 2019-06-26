@@ -106,14 +106,20 @@ start-discover-filters {
 
 .item {
   display: flex;
+  align-items: stretch;
   border: 1px solid #bbb;
   border-radius: 4px;
   margin-bottom: 10px;
 }
 
 .item-left {
-  padding: 16px 18px 14px;
+  padding: 6px 0 6px 8px;
+}
+
+.item-center {
+  padding: 10px 10px;
   flex: 1;
+  align-self: center;
 }
 
 .item-right {
@@ -123,6 +129,39 @@ start-discover-filters {
   border-left: 1px solid #ccc;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+
+.item .voting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.item .voting .fa-circle {
+  font-size: 5px;
+  position: relative;
+  top: -3px;
+  color: gray;
+}
+
+.item .voting button {
+  font-size: 15px;
+  padding: 4px 4px;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.item .voting button:hover {
+  background: #f5f5f5;
+}
+
+.item .voting .voted {
+  color: #000;
+  font-weight: 800;
 }
 
 .item .title {

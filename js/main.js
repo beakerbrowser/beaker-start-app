@@ -166,7 +166,7 @@ export class StartApp extends LitElement {
       fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
       style: `padding: 4px 0`,
       items: [
-        {icon: 'fas fa-external-link-alt', label: 'View my website', click: () => { window.location = this.user.url }},
+        {icon: 'fas fa-external-link-alt', label: 'View my website', href: this.user.url },
         {icon: 'fa fa-link', label: 'Copy link', click: () => {
           writeToClipboard(this.user.url)
           toast.create('Copied to your clipboard')

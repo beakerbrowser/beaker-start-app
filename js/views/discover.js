@@ -1,6 +1,7 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { ifDefined } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/if-defined.js'
+import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { timeDifference } from '/vendor/beaker-app-stdlib/js/time.js'
 import { toNiceUrl, pluralize } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
@@ -17,9 +18,11 @@ const bookmarks = navigator.importSystemAPI('bookmarks')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 const media = navigator.importSystemAPI('unwalled-garden-media')
 const tagsAPI = navigator.importSystemAPI('unwalled-garden-tags')
+const votes = navigator.importSystemAPI('unwalled-garden-votes')
 
 const STANDARD_SORT_OPTIONS = {
   recent: 'Latest',
+  votes: 'Highest voted',
   alphabetical: 'Alphabetical'
 }
 
@@ -68,9 +71,13 @@ class Network extends LitElement {
   reset () {
     // set default params as needed to be safe when the view changes
     if (this.currentView === 'follows') {
-      this.currentSort = 'follows'
+      if (!(this.currentSort in FOLLOW_SORT_OPTIONS)) {
+        this.currentSort = 'follows'
+      }
     } else {
-      this.currentSort = 'recent'
+      if (!(this.currentSort in STANDARD_SORT_OPTIONS)) {
+        this.currentSort = 'recent'
+      }
     }
     QP.setParams({sort: this.currentSort})
   }
@@ -89,40 +96,66 @@ class Network extends LitElement {
       authors = this.currentSource
       this.currentSourceTitle = (await profiles.get(authors)).title
     }
-    var tags = this.currentTag
 
     // fetch content for this view
+    var items = []
+    var tags = []
     if (this.currentView === 'bookmarks') {
-      this.items = await bookmarks.query({filters: {authors, tags}})
-      this.tags = await tagsAPI.listBookmarkTags({filters: {authors}})
+      items = await bookmarks.query({filters: {isPublic: true, authors, tags: this.currentTag}})
+      tags = await tagsAPI.listBookmarkTags({filters: {authors}})
     } else if (this.currentView === 'follows') {
-      let p = (await follows.list({filters: {authors}})).map(({topic}) => topic)
+      items = (await follows.list({filters: {authors}})).map(({topic}) => topic)
       // remove duplicates:
-      p = p.filter((profile, index) => {
-        return p.findIndex(profile2 => profile.url === profile2.url) === index
+      items = items.filter((profile, index) => {
+        return items.findIndex(profile2 => profile.url === profile2.url) === index
       })
-      await Promise.all(p.map(async (profile) => {
+      await Promise.all(items.map(async (profile) => {
         profile.isYou = profile.url === this.user.url
         profile.followers = (await follows.list({filters: {topics: profile.url}})).map(({author}) => author)
         profile.follows = (await follows.list({filters: {authors: profile.url}})).map(({topic}) => topic)
       }))
-      this.items = p
     } else {
       let subtypes = `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}`
-      this.items = (await media.list({filters: {authors, subtypes, tags}}))
-      this.tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
+      items = (await media.list({filters: {authors, subtypes, tags: this.currentTag}}))
+      tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
     }
-    this.tags.sort((a, b) => b.count - a.count)
+    tags.sort((a, b) => b.count - a.count)
+
+    // fetch votes
+    if (this.currentView !== 'follows') {
+      await Promise.all(items.map(async (item) => {
+        // TODO
+        // when the bookmarks API finally hets updated, remove this `record` thing
+        // -prf
+        if (item.record) item.url = item.record.url
+
+        item.votes = await votes.tabulate(item.url)
+        item.votes.karma = item.votes.upvotes - item.votes.downvotes
+        item.votes.user = 0
+        if (item.votes.upvoters.find(u => u.url === this.user.url)) {
+          item.votes.user = 1
+        } else if (item.votes.downvoters.find(u => u.url === this.user.url)) {
+          item.votes.user = -1
+        }
+      }))
+    }
 
     // TEMP sort in memory
     if (this.currentSort === 'alphabetical') {
-      this.items.sort((a, b) => a.title.localeCompare(b.title))
+      items.sort((a, b) => a.title.localeCompare(b.title))
     } else if (this.currentSort === 'recent') {
-      this.items.sort((a, b) => b.createdAt - a.createdAt)
+      items.sort((a, b) => b.createdAt - a.createdAt)
     } else if (this.currentSort === 'follows') {
-      this.items.sort((a, b) => b.followers.length - a.followers.length)
+      items.sort((a, b) => b.followers.length - a.followers.length)
+    } else if (this.currentSort === 'votes') {
+      items.sort((a, b) => {
+        var score = b.votes.karma - a.votes.karma
+        return score !== 0 ? score : b.createdAt - a.createdAt
+      })
     }
 
+    this.items = items
+    this.tags = tags
     console.log('loaded', this.items)
 
     // load counts on all media types
@@ -266,9 +299,20 @@ class Network extends LitElement {
   }
 
   renderItem (item) {
+    var karma = item.votes ? item.votes.karma : 0
+    var upcls = classMap({voted: item.votes && item.votes.user === 1})
+    var downcls = classMap({voted: item.votes && item.votes.user === -1})
+    var votecls = classMap({voted: item.votes && item.votes.user !== 0})
     return html`
       <div class="item">
         <div class="item-left">
+          <div class="voting">
+            <button class=${upcls} @click=${e => this.onUserVote(e, 1, item)}><span class="fas fa-fw fa-angle-up"></span></button>
+            <span class=${votecls}>${karma || html`<span class="fas fa-fw fa-circle"></span>`}</span>
+            <button class=${downcls} @click=${e => this.onUserVote(e, -1, item)}><span class="fas fa-fw fa-angle-down"></span></button>
+          </div>
+        </div>
+        <div class="item-center">
           <div class="title"><a href=${item.href}>${item.title}</a></div>
           ${item.description ? html`<div class="description">${item.description}</div>` : ''}
           <div class="url"><a href=${item.href}>${toNiceUrl(item.href)}</a></div>
@@ -352,6 +396,20 @@ class Network extends LitElement {
     await follows.remove(user.url)
     toast.create(`Unfollowed ${user.title}`, '', 1e3)
     user.followers = user.followers.filter(f => f.url !== this.user.url)
+    this.requestUpdate()
+  }
+
+  async onUserVote (e, vote, item) {
+    // detect vote undo
+    if (item.votes.user === vote) {
+      vote = 0
+    }
+
+    // set vote, update, redraw
+    await votes.set(item.url, vote)
+    item.votes = await votes.tabulate(item.url)
+    item.votes.karma = item.votes.upvotes - item.votes.downvotes
+    item.votes.user = vote
     this.requestUpdate()
   }
 }
