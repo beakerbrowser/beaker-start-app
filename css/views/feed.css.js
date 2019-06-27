@@ -3,27 +3,32 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 :host {
   display: block;
-  margin: 40px auto;
-  width: 800px;
+  background: #fafafa;
 }
 
-.layout {
-  display: flex;
+.feed {
+  display: none;
+  height: calc(100vh - 131px);
+  overflow-y: scroll;
+  padding: 40px;
 }
 
-.nav {
-  flex: 0 0 130px;
-  text-align: right;
-  margin-right: 10px;
+.feed.visible {
+  display: block;
 }
 
-.content {
-  flex: 0 0 540px;
+.expanded-post {
+  height: calc(100vh - 91px);
+  overflow-y: scroll;
+  padding: 20px;
 }
 
 beaker-feed-composer,
 beaker-feed-post {
-  margin-bottom: 10px;
+  display: block;
+  box-sizing: border-box;
+  width: 600px;
+  margin: 0 auto 10px;
   --border-color: #bbb;
 }
 

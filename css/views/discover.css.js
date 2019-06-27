@@ -10,6 +10,7 @@ ${tooltipCSS}
 
 :host {
   display: block;
+  background: #fafafa;
 }
 
 a {
@@ -79,15 +80,15 @@ start-discover-filters {
   padding: 8px 16px;
   margin: 16px 0;
   font-size: 14px;
-  box-shadow: inset 0px 2px 1px rgba(0,0,0,.05);
-  background: #fafafa;
+  background: #fff;
   outline: 0;
 }
 
 .empty {
-  background: #f5f5f5;
-  padding: 3rem;
+  background: #fff;
+  padding: 4rem;
   text-align: center;
+  border: 1px solid #bbb;
   border-radius: 4px;
   color: gray;
   font-weight: 300;
@@ -110,6 +111,7 @@ start-discover-filters {
   border: 1px solid #bbb;
   border-radius: 4px;
   margin-bottom: 10px;
+  background: #fff;
 }
 
 .item-left {
@@ -125,7 +127,7 @@ start-discover-filters {
 .item-right {
   padding: 10px 12px 8px;
   flex: 0 0 160px;
-  background: #fafafa;
+  background: #fff;
   border-left: 1px solid #ccc;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -208,6 +210,7 @@ start-discover-filters {
   border: 1px solid #bbb;
   border-radius: 4px;
   margin-bottom: 10px;
+  background: #fff;
 }
 
 .site-left {
@@ -224,7 +227,7 @@ start-discover-filters {
   padding: 10px 12px 8px;
   flex: 0 0 160px;
   line-height: 21px;
-  background: #fafafa;
+  background: #fff;
   border-left: 1px solid #ccc;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;

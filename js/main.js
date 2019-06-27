@@ -40,28 +40,6 @@ export class StartApp extends LitElement {
     // load
     this.user = null
     this.load()
-
-    // register global event listeners
-    this.didGesture = false
-    const moveView = dir => {
-      let i = VIEWS.indexOf(this.view)
-      if (dir < 0 && i > 0) {
-        this.setView(VIEWS[i - 1])
-      } else if (dir > 0 && i < VIEWS.length - 1) {
-        this.setView(VIEWS[i +  1])
-      }
-    }
-    window.addEventListener('wheel', (e) => {
-      // handle trackpad swipe
-      var absX = Math.abs(e.deltaX)
-      if (!this.didGesture && absX > 30) {
-        this.didGesture = true
-        moveView(e.deltaX)
-      }
-      if (this.didGesture && absX < 10) {
-        this.didGesture = false
-      }
-    })
   }
 
   async load () {
@@ -71,13 +49,6 @@ export class StartApp extends LitElement {
   setView (v) {
     this.view = v
     history.replaceState({}, '', `/${v === 'pins' ? '' : v}`)
-    this.shadowRoot.querySelector(`#view-${v}`).classList.remove('hidden')
-    this.isTransitioning = true
-    setTimeout(() => {
-      this.isTransitioning = false
-      Array.from(this.shadowRoot.querySelectorAll('.views > *')).map(el => el.classList.add('hidden'))
-      this.shadowRoot.querySelector(`#view-${this.view}`).classList.remove('hidden')
-    }, 300)
   }
 
   // rendering
@@ -114,14 +85,14 @@ export class StartApp extends LitElement {
             : ''}
         </div>
       </div>
-      <div class="views-wrapper">
-        <div class="views ${this.isTransitioning ? 'transitioning' : ''}" data-view=${this.view}>
-          <div id="view-pins"><start-pinned-bookmarks></start-pinned-bookmarks></div>
-          <div id="view-feed"><start-feed></start-feed></div>
-          <div id="view-discover"><start-discover></start-discover></div>
-        </div>
-      </div>
+      <div class="views">${this.renderView()}</div>
     `
+  }
+
+  renderView () {
+    if (this.view === 'feed') return html`<start-feed></start-feed>`
+    if (this.view === 'discover') return html`<start-discover></start-discover>`
+    return html`<start-pinned-bookmarks></start-pinned-bookmarks>`    
   }
 
   // events

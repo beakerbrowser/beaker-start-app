@@ -98,40 +98,9 @@ h5 {
   margin: 0;
 }
 
-.views-wrapper {
+.views {
   height: calc(100vh - 51px);
   overflow: hidden;
-}
-
-.views {
-  position: relative;
-  transform: translateX(0);
-}
-
-.views.transitioning {
-  transition: transform 0.2s;
-}
-.views[data-view="feed"] {
-  transform: translateX(-100vw);
-}
-.views[data-view="discover"] {
-  transform: translateX(-200vw);
-}
-
-#view-pins,
-#view-feed,
-#view-discover {
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-#view-feed {
-  left: 100vw;
-  height: calc(100vh - 50px);
-  overflow-y: auto;
-}
-#view-discover {
-  left: 200vw;
 }
 
 start-pinned-bookmarks {

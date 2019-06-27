@@ -21,8 +21,8 @@ const tagsAPI = navigator.importSystemAPI('unwalled-garden-tags')
 const votes = navigator.importSystemAPI('unwalled-garden-votes')
 
 const STANDARD_SORT_OPTIONS = {
-  recent: 'Latest',
   votes: 'Highest voted',
+  recent: 'Latest',
   alphabetical: 'Alphabetical'
 }
 
@@ -61,23 +61,32 @@ class Network extends LitElement {
     this.currentSearch = QP.getParam('q', '')
     this.currentTag = QP.getParam('tag') || undefined
     this.currentSource = QP.getParam('source', 'network')
-    this.currentSort = QP.getParam('sort', 'recent')
+    this.currentSort = QP.getParam('sort', '')
     this.currentSourceTitle = '' // used when currentSource != network
     this.authors = []
     this.items = []
     this.tags = []
     this.counts = {}
+
+    if (!this.currentSort) {
+      // set defaults
+      if (this.currentView === 'follows') {
+        this.currentSort = 'follows'
+      } else {
+        this.currentSort = 'votes'
+      }
+    }
   }
 
   reset () {
     // set default params as needed to be safe when the view changes
     if (this.currentView === 'follows') {
       if (!(this.currentSort in FOLLOW_SORT_OPTIONS)) {
-        this.currentSort = 'follows'
+        this.currentSort = sessionStorage.followsSort || 'follows'
       }
     } else {
       if (!(this.currentSort in STANDARD_SORT_OPTIONS)) {
-        this.currentSort = 'recent'
+        this.currentSort = sessionStorage.standardSort ||'recent'
       }
     }
     QP.setParams({sort: this.currentSort})
@@ -344,6 +353,14 @@ class Network extends LitElement {
   }
 
   onChangeSort (e) {
+    // persist the sort choice so that switching between view-types doesnt lose it
+    if (this.currentView === 'follows') {
+      sessionStorage.followsSort = e.detail.sort
+    } else {
+      sessionStorage.standardSort = e.detail.sort
+    }
+
+    // update & load
     this.currentSort = e.detail.sort
     QP.setParams({sort: this.currentSort})
     this.load()
