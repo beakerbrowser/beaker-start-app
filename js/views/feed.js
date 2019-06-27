@@ -87,6 +87,7 @@ class Feed extends LitElement {
             @add-reaction=${this.onAddReaction}
             @delete-reaction=${this.onDeleteReaction}
             @expand=${this.onExpandPost}
+            @delete=${this.onDeletePost}
           ></beaker-feed-post>
         `)}
         ${this.posts.length === 0
@@ -146,6 +147,23 @@ class Feed extends LitElement {
 
     // reload the feed to show the new post
     this.load()
+  }
+
+  async onDeletePost (e) {
+    let post = e.detail.post
+    
+    // delete the post
+    try {
+      await posts.remove(post.url)
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to add post')
+      console.error(e)
+      return
+    }
+
+    // remove from the feed
+    this.posts = this.posts.filter(p2 => p2.url !== post.url)
   }
 
   async onSubmitComment (e) {
