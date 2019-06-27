@@ -125,10 +125,9 @@ start-discover-filters {
 }
 
 .item-right {
-  padding: 10px 12px 8px;
-  flex: 0 0 160px;
+  padding: 10px 12px 8px 0;
+  width: 160px;
   background: #fff;
-  border-left: 1px solid #ccc;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -185,13 +184,32 @@ start-discover-filters {
   color: gray;
 }
 
+.item .ctrls {
+  float: right;
+  text-align: right;
+}
+
+.item .ctrls > div {
+  margin-bottom: 10px;
+}
+
+.item .ctrls button {
+  cursor: pointer;
+}
+
 .item .provenance {
-  color: var(--color-text);
+  color: var(--color-text--muted);
   line-height: 21px;
 }
 
 .item .provenance a {
-  color: var(--color-text);
+  color: inherit;
+}
+
+.item .tags {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item .tags .fa-tags {
@@ -202,7 +220,6 @@ start-discover-filters {
 .item .tags a {
   display: inline-block;
   margin-right: 4px;
-  color: var(--color-text--muted);
 }
 
 .site {
@@ -224,17 +241,17 @@ start-discover-filters {
 }
 
 .site-right {
-  padding: 10px 12px 8px;
-  flex: 0 0 160px;
+  padding: 16px 12px 8px 0;
+  flex: 0 0 120px;
   line-height: 21px;
   background: #fff;
-  border-left: 1px solid #ccc;
+  color: var(--color-text--muted);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
 .site-right a {
-  color: var(--color-text);
+  color: inherit;
   cursor: pointer;
 }
 

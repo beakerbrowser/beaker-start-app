@@ -3,8 +3,10 @@ import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/di
 import { ifDefined } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/if-defined.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { timeDifference } from '/vendor/beaker-app-stdlib/js/time.js'
+import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import { toNiceUrl, pluralize } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
+import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as QP from '../lib/query-params.js'
 import discoverCSS from '../../../css/views/discover.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
@@ -317,6 +319,9 @@ class Network extends LitElement {
           </div>
         </div>
         <div class="item-center">
+          <div class="ctrls">
+            <div><button class="transparent" @click=${e => this.onClickItemMenu(e, item)}><span class="fas fa-fw fa-ellipsis-h"></span></button></div>
+          </div>
           <div class="title"><a href=${item.href}>${item.title}</a></div>
           ${item.description ? html`<div class="description">${item.description}</div>` : ''}
           <div class="url"><a href=${item.href}>${toNiceUrl(item.href)}</a></div>
@@ -409,6 +414,37 @@ class Network extends LitElement {
     QP.setParams({q: ''})
   }
 
+  onClickItemMenu (e, item) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    var items = [
+      {icon: 'far fa-fw fa-file-alt', label: 'View file', click: () => window.open(item.url) },
+      {icon: 'fas fa-fw fa-link', label: 'Copy URL', click: () => {
+        writeToClipboard(item.url)
+        toast.create('Copied to your clipboard')
+      }}
+    ]
+
+    if (this.user.url === item.author.url) {
+      items.push('-')
+      items.push({icon: 'fas fa-fw fa-trash', label: 'Delete', click: () => this.onDeleteItem(item) })
+    }
+
+    var rect = e.currentTarget.getClientRects()[0]
+    contextMenu.create({
+      x: rect.right + 4,
+      y: rect.bottom + 8,
+      right: true,
+      withTriangle: true,
+      roomy: true,
+      noBorders: true,
+      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
+      style: `padding: 4px 0`,
+      items 
+    })
+  }
+
   async onFollow (e, user) {
     await follows.add(user.url)
     toast.create(`Followed ${user.title}`, '', 1e3)
@@ -421,6 +457,28 @@ class Network extends LitElement {
     toast.create(`Unfollowed ${user.title}`, '', 1e3)
     user.followers = user.followers.filter(f => f.url !== this.user.url)
     this.requestUpdate()
+  }
+
+  async onDeleteItem (item) {
+    if (!confirm('Are you sure?')) return
+
+    // delete the item
+    try {
+      if (this.currentView === 'bookmarks') {
+        await bookmarks.remove(item.href)
+      } else {
+        await media.remove(item.url)
+      }
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to post item')
+      console.error(e)
+      return
+    }
+    toast.create('Deleted')
+
+    // remove from the listing
+    this.items = this.items.filter(i => i.url !== item.url)
   }
 
   async onUserVote (e, vote, item) {
