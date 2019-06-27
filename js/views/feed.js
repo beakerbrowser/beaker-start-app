@@ -2,7 +2,7 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import feedCSS from '../../../css/views/feed.css.js'
-import * as QP from '../lib/query-params.js'
+import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/post.js'
 import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
@@ -107,6 +107,7 @@ class Feed extends LitElement {
             @add-reaction=${this.onAddReaction}
             @delete-reaction=${this.onDeleteReaction}
             @submit-comment=${this.onSubmitComment}
+            @delete-comment=${this.onDeleteComment}
           ></start-expanded-post>
         </div>
       ` : ''}
@@ -151,16 +152,17 @@ class Feed extends LitElement {
 
   async onDeletePost (e) {
     let post = e.detail.post
-    
+
     // delete the post
     try {
       await posts.remove(post.url)
     } catch (e) {
       alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
-      console.error('Failed to add post')
+      console.error('Failed to delete post')
       console.error(e)
       return
     }
+    toast.create('Post deleted')
 
     // remove from the feed
     this.posts = this.posts.filter(p2 => p2.url !== post.url)
@@ -177,6 +179,25 @@ class Feed extends LitElement {
       console.error(e)
       return
     }
+
+    // reload the post comments
+    await this.loadPostComments(this.expandedPost)
+    this.expandedPost = Object.assign({}, this.expandedPost) // forces a re-render
+  }
+
+  async onDeleteComment (e) {
+    let comment = e.detail.comment
+    
+    // delete the comment
+    try {
+      await posts.remove(comment.url)
+    } catch (e) {
+      alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')
+      console.error('Failed to delete comment')
+      console.error(e)
+      return
+    }
+    toast.create('Comment deleted')
 
     // reload the post comments
     await this.loadPostComments(this.expandedPost)
