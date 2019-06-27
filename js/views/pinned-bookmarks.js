@@ -28,6 +28,10 @@ class PinnedBookmarks extends LitElement {
     }, 500))
   }
 
+  reset () {
+    
+  }
+
   async load () {
     var bs = await bookmarks.query({filters: {pinned: true}})
     bs.sort((a, b) => b.pinOrder > a.pinOrder ? 1 : -1)

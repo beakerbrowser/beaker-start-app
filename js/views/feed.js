@@ -33,6 +33,10 @@ class Feed extends LitElement {
     this.expandedPost = null
   }
 
+  reset () {
+    this.expandedPost = null
+  }
+
   get feedAuthors () {
     if (!this.user) return []
     return [this.user.url].concat(this.followedUsers)

@@ -57,17 +57,24 @@ class Network extends LitElement {
     super()
 
     this.user = null
-    this.currentView = QP.getParam('view', 'bookmarks')
-    this.currentSearch = QP.getParam('q', '')
-    this.currentTag = QP.getParam('tag') || undefined
-    this.currentSource = QP.getParam('source', 'network')
-    this.currentSort = QP.getParam('sort', '')
+    this.currentView = ''
+    this.currentSearch = ''
+    this.currentTag = ''
+    this.currentSource = ''
+    this.currentSort = ''
     this.currentSourceTitle = '' // used when currentSource != network
     this.authors = []
     this.items = []
     this.tags = []
     this.counts = {}
+  }
 
+  reset () {
+    this.currentView = QP.getParam('view', 'bookmarks')
+    this.currentSearch = QP.getParam('q', '')
+    this.currentTag = QP.getParam('tag') || undefined
+    this.currentSource = QP.getParam('source', 'network')
+    this.currentSort = QP.getParam('sort', '')
     if (!this.currentSort) {
       // set defaults
       if (this.currentView === 'follows') {
@@ -76,20 +83,6 @@ class Network extends LitElement {
         this.currentSort = 'votes'
       }
     }
-  }
-
-  reset () {
-    // set default params as needed to be safe when the view changes
-    if (this.currentView === 'follows') {
-      if (!(this.currentSort in FOLLOW_SORT_OPTIONS)) {
-        this.currentSort = sessionStorage.followsSort || 'follows'
-      }
-    } else {
-      if (!(this.currentSort in STANDARD_SORT_OPTIONS)) {
-        this.currentSort = sessionStorage.standardSort ||'recent'
-      }
-    }
-    QP.setParams({sort: this.currentSort})
   }
 
   async load () {
@@ -348,7 +341,19 @@ class Network extends LitElement {
   onChangeView (e) {
     this.currentView = e.detail.view
     QP.setParams({view: this.currentView})
-    this.reset()
+    
+    // set default params as needed to be safe when the view changes
+    if (this.currentView === 'follows') {
+      if (!(this.currentSort in FOLLOW_SORT_OPTIONS)) {
+        this.currentSort = sessionStorage.followsSort || 'follows'
+      }
+    } else {
+      if (!(this.currentSort in STANDARD_SORT_OPTIONS)) {
+        this.currentSort = sessionStorage.standardSort ||'recent'
+      }
+    }
+    QP.setParams({sort: this.currentSort})
+
     this.load()
   }
 

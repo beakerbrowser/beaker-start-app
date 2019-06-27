@@ -44,11 +44,27 @@ export class StartApp extends LitElement {
 
   async load () {
     this.user = await profiles.me()
+    this.loadView()
   }
 
-  setView (v) {
+  async loadView () {
+    var el
+    if (this.view === 'pins') {
+      el = this.shadowRoot.querySelector('start-pinned-bookmarks')
+    } else if (this.view === 'feed') {
+      el = this.shadowRoot.querySelector('start-feed')
+    } else if (this.view === 'discover') {
+      el = this.shadowRoot.querySelector('start-discover')
+    }
+    el.reset()
+    el.load()
+  }
+
+  async setView (v) {
     this.view = v
     history.replaceState({}, '', `/${v === 'pins' ? '' : v}`)
+    await this.updateCompleted
+    this.loadView()
   }
 
   // rendering
@@ -97,18 +113,6 @@ export class StartApp extends LitElement {
 
   // events
   // =
-
-  updated () {
-    if (this.view === 'pins') {
-      this.shadowRoot.querySelector('start-pinned-bookmarks').load()
-    }
-    if (this.view === 'feed') {
-      this.shadowRoot.querySelector('start-feed').load()
-    }
-    if (this.view === 'discover') {
-      this.shadowRoot.querySelector('start-discover').load()
-    }
-  }
 
   async onClickCloud (e) {
     e.preventDefault()
