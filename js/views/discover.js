@@ -15,7 +15,7 @@ import '../com/discover/sources.js'
 import '../com/discover/tags.js'
 import '../com/discover/filters.js'
 
-const profiles = navigator.importSystemAPI('profiles')
+const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const bookmarks = navigator.importSystemAPI('bookmarks')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 const media = navigator.importSystemAPI('unwalled-garden-media')

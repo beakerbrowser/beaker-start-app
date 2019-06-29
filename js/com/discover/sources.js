@@ -5,7 +5,7 @@ import { ifDefined } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
 import discoverSourcesCSS from '../../../css/com/discover/sources.css.js'
 
-const profiles = navigator.importSystemAPI('profiles')
+const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 
 class DiscoverSources extends LitElement {

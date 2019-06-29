@@ -10,7 +10,7 @@ import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import * as cloudMenu from './com/cloud-menu.js'
 import mainCSS from '../css/main.css.js'
 
-const profiles = navigator.importSystemAPI('profiles')
+const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
 const VIEWS = ['pins', 'feed', 'discover']
 

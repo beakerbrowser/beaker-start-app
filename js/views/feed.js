@@ -8,7 +8,7 @@ import '/vendor/beaker-app-stdlib/js/com/feed/composer.js'
 import '/vendor/beaker-app-stdlib/js/com/profile-info-card.js'
 import '../com/feed/expanded-post.js'
 
-const profiles = navigator.importSystemAPI('profiles')
+const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const comments = navigator.importSystemAPI('unwalled-garden-comments')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 const posts = navigator.importSystemAPI('unwalled-garden-posts')
