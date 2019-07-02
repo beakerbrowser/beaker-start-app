@@ -10,7 +10,6 @@ ${tooltipCSS}
 
 :host {
   display: block;
-  background: #fafafa;
 }
 
 a {
@@ -24,17 +23,18 @@ a:hover {
 
 .layout {
   display: flex;
+  overflow-y: scroll;
+  height: calc(100vh - 71px);
 }
 
 .nav {
   flex: 0 0 220px;
-  padding-left: 20px;
+  padding: 10px;
 }
 
 .content {
   flex: 1;
-  overflow-y: scroll;
-  height: calc(100vh - 50px);
+  display: flex;
 }
 
 .content-center {
@@ -43,20 +43,16 @@ a:hover {
 }
 
 .content-right {
-  flex: 0 0 230px;
+  flex: 0 0 210px;
   padding: 20px 70px 20px 20px;
 }
 
 .content-right > * {
-  margin-bottom: 20px;
+  margin: 0 0 30px;
 }
 
-start-discover-nav {
-  margin-right: 10px;
-}
-
-start-discover-filters {
-  margin: 19px 0;
+search-filters {
+  margin: 16px 0;
 }
 
 .label {
@@ -72,23 +68,10 @@ start-discover-filters {
   line-height: 1;
 }
 
-#search {
-  box-sizing: border-box;
-  width: 160px;
-  border-radius: 20px;
-  border: 1px solid #bbb;
-  padding: 8px 16px;
-  margin: 16px 0;
-  font-size: 14px;
-  background: #fff;
-  outline: 0;
-}
-
 .empty {
-  background: #fff;
+  background: #fafafa;
   padding: 4rem;
   text-align: center;
-  border: 1px solid #bbb;
   border-radius: 4px;
   color: gray;
   font-weight: 300;
@@ -108,10 +91,13 @@ start-discover-filters {
 .item {
   display: flex;
   align-items: stretch;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  border-top: 1px solid #eee;
   background: #fff;
+  padding: 5px 0;
+}
+
+.item:last-child {
+  border-bottom: 1px solid #eee;
 }
 
 .item-left {
@@ -224,10 +210,12 @@ start-discover-filters {
 
 .site {
   display: flex;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  margin-bottom: 10px;
   background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.site:last-child {
+  border-bottom: 1px solid #eee;
 }
 
 .site-left {

@@ -3,12 +3,12 @@ import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { ifDefined } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/if-defined.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
-import discoverSourcesCSS from '../../../css/com/discover/sources.css.js'
+import searchSourcesCSS from '../../../css/com/search/sources.css.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
 
-class DiscoverSources extends LitElement {
+class SearchSources extends LitElement {
   static get properties () {
     return {
       label: {type: String},
@@ -47,7 +47,7 @@ class DiscoverSources extends LitElement {
         <a class=${cls} data-tooltip="${ifDefined(!!img ? label : undefined)}" @click=${e => this.onClick(e, id)}>
           ${img
             ? html`<span class="img-wrapper"><span class="img">${img}</span></span>`
-            : html`<span class="label">${label}</span>`}
+            : html`<span class="img-wrapper"><span class="img">${label}</span></span>`}
         </a>
       `
     }
@@ -55,8 +55,8 @@ class DiscoverSources extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="heading"><span class="fas fa-user"></span> ${this.label} by</div>
       <div class="sources">
-        ${item('network', 'All of my network', false)}
-        ${this.me ? item(this.me.url, 'Me', false) : ''}
+        ${item('network', 'All', false)}
+        ${this.me ? item(this.me.url, 'Me', html`<img src="asset:thumb:${this.me.url}">`) : ''}
         ${repeat(this.follows, f => item(f.url, f.title, html`<img src="asset:thumb:${f.url}">`))}
       </div>
     `
@@ -70,5 +70,5 @@ class DiscoverSources extends LitElement {
     emit(this, 'change', {bubbles: true, detail: {source}})
   }
 }
-DiscoverSources.styles = discoverSourcesCSS
-customElements.define('start-discover-sources', DiscoverSources)
+SearchSources.styles = searchSourcesCSS
+customElements.define('search-sources', SearchSources)

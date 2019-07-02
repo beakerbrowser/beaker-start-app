@@ -79,36 +79,40 @@ class Feed extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="${classMap({feed: true, visible: !this.expandedPost})}">
-        <beaker-feed-composer @submit=${this.onSubmitPost}></beaker-feed-composer>
-        ${repeat(this.posts, post => html`
-          <beaker-feed-post
-            .post=${post}
-            user-url="${this.user.url}"
-            @add-reaction=${this.onAddReaction}
-            @delete-reaction=${this.onDeleteReaction}
-            @expand=${this.onExpandPost}
-            @delete=${this.onDeletePost}
-          ></beaker-feed-post>
-        `)}
-        ${this.posts.length === 0
-          ? html`
-            <div class="empty">
-              <div><span class="fas fa-image"></span></div>
-              <div>This is your feed. It will show posts from sites you follow.</div>
-            </div>
-          ` : ''}
+        <div class="feed-inner">
+          <beaker-feed-composer @submit=${this.onSubmitPost}></beaker-feed-composer>
+          ${repeat(this.posts, post => html`
+            <beaker-feed-post
+              .post=${post}
+              user-url="${this.user.url}"
+              @add-reaction=${this.onAddReaction}
+              @delete-reaction=${this.onDeleteReaction}
+              @expand=${this.onExpandPost}
+              @delete=${this.onDeletePost}
+            ></beaker-feed-post>
+          `)}
+          ${this.posts.length === 0
+            ? html`
+              <div class="empty">
+                <div><span class="fas fa-image"></span></div>
+                <div>This is your feed. It will show posts from sites you follow.</div>
+              </div>
+            ` : ''}
+        </div>
       </div>
       ${this.expandedPost ? html`
         <div class="expanded-post" @click=${this.onClickExpandedPostOuter}>
-          <start-expanded-post
-            .post=${this.expandedPost}
-            .user=${this.user}
-            @close=${this.onClosePost}
-            @add-reaction=${this.onAddReaction}
-            @delete-reaction=${this.onDeleteReaction}
-            @submit-comment=${this.onSubmitComment}
-            @delete-comment=${this.onDeleteComment}
-          ></start-expanded-post>
+          <div class="expanded-post-inner">
+            <start-expanded-post
+              .post=${this.expandedPost}
+              .user=${this.user}
+              @close=${this.onClosePost}
+              @add-reaction=${this.onAddReaction}
+              @delete-reaction=${this.onDeleteReaction}
+              @submit-comment=${this.onSubmitComment}
+              @delete-comment=${this.onDeleteComment}
+            ></start-expanded-post>
+          </div>
         </div>
       ` : ''}
     `

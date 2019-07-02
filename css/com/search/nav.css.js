@@ -28,14 +28,13 @@ a:hover {
 }
 
 .sub a {
-  color: var( --color-text--muted);
+  color: var(--color-text--muted);
   padding: 8px 10px;
 }
 
 a.current {
   color: var(--blue);
 }
-
 
 .no-icon {
   display: inline-block;

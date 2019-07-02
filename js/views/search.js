@@ -8,12 +8,13 @@ import { toNiceUrl, pluralize } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as QP from '../lib/query-params.js'
-import discoverCSS from '../../../css/views/discover.css.js'
+import searchCSS from '../../../css/views/search.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
-import '../com/discover/nav.js'
-import '../com/discover/sources.js'
-import '../com/discover/tags.js'
-import '../com/discover/filters.js'
+import '../com/search/header.js'
+import '../com/search/nav.js'
+import '../com/search/sources.js'
+import '../com/search/tags.js'
+import '../com/search/filters.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const bookmarks = navigator.importSystemAPI('bookmarks')
@@ -46,12 +47,12 @@ const MEDIA_TYPES = {
   files: 'file'
 }
 
-class Network extends LitElement {
+class SearchView extends LitElement {
   static get properties () {
     return {
       items: {type: Array},
       counts: {type: Object},
-      currentSearch: {type: String}
+      query: {type: String}
     }
   }
 
@@ -60,7 +61,7 @@ class Network extends LitElement {
 
     this.user = null
     this.currentView = ''
-    this.currentSearch = ''
+    this.query = ''
     this.currentTag = ''
     this.currentSource = ''
     this.currentSort = ''
@@ -72,8 +73,9 @@ class Network extends LitElement {
   }
 
   reset () {
+    document.title = 'Search'
     this.currentView = QP.getParam('view', 'bookmarks')
-    this.currentSearch = QP.getParam('q', '')
+    this.query = QP.getParam('q', '')
     this.currentTag = QP.getParam('tag') || undefined
     this.currentSource = QP.getParam('source', 'network')
     this.currentSort = QP.getParam('sort', '')
@@ -121,7 +123,7 @@ class Network extends LitElement {
         profile.follows = (await follows.list({filters: {authors: profile.url}})).map(({topic}) => topic)
       }))
     } else {
-      let subtypes = `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}`
+      let subtypes = this.currentView !== 'media' ? `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}` : undefined
       items = (await media.list({filters: {authors, subtypes, tags: this.currentTag}}))
       tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
     }
@@ -182,9 +184,9 @@ class Network extends LitElement {
     else currentSource = this.currentSourceTitle
 
     var items = this.items
-    if (this.currentSearch) {
+    if (this.query) {
       // TEMP filter in memory
-      let q = this.currentSearch.toLocaleLowerCase()
+      let q = this.query.toLocaleLowerCase()
       items = items.filter(item => (
         item.title.toLowerCase().includes(q)
       ))
@@ -192,24 +194,24 @@ class Network extends LitElement {
     
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
+      <search-header @submit-query=${this.onSubmitQuery} query=${this.query}></search-header>
       <div class="layout">
         <div class="nav">
-          <input id="search" type="text" placeholder="Search" @keyup=${this.onKeyupSearch}>
-          <start-discover-nav .counts=${this.counts} current=${this.currentView} @change=${this.onChangeView}></start-discover-nav>
+          <search-nav .counts=${this.counts} current=${this.currentView} @change=${this.onChangeView}></search-nav>
         </div>
-        <div class="content layout">
+        <div class="content">
           <div class="content-center">
           ${this.currentView === 'follows'
             ? html`
-              <start-discover-filters
+              <search-filters
                 .sort=${this.currentSort}
                 .sortOptions=${FOLLOW_SORT_OPTIONS}
                 .source=${currentSource}
-                .search=${this.currentSearch}
+                .search=${this.query}
                 @change-sort=${this.onChangeSort}
                 @clear-source=${this.onClearSource}
                 @clear-search=${this.onClearSearch}
-              ></start-discover-filters>
+              ></search-filters>
               ${!items.length
                 ? html`<div class="empty"><div><span class="far fa-sad-tear"></span></div>No followed sites found.</div>`
                 : ''}
@@ -218,17 +220,17 @@ class Network extends LitElement {
               </div>
             `
             : html`
-              <start-discover-filters
+              <search-filters
                 .sort=${this.currentSort}
                 .sortOptions=${STANDARD_SORT_OPTIONS}
                 .source=${currentSource}
                 .tag=${this.currentTag}
-                .search=${this.currentSearch}
+                .search=${this.query}
                 @change-sort=${this.onChangeSort}
                 @clear-source=${this.onClearSource}
                 @clear-tag=${this.onClearTag}
                 @clear-search=${this.onClearSearch}
-              ></start-discover-filters>
+              ></search-filters>
               ${!items.length
                 ? html`<div class="empty"><div><span class="far fa-sad-tear"></span></div>No ${this.currentView} found.</div>`
                 : ''}
@@ -238,14 +240,14 @@ class Network extends LitElement {
               `}
           </div>
           <div class="content-right">
-            <start-discover-sources
-              label=${this.currentView === 'follows' ? 'Followed' : 'Created'}
+            <search-sources
+              label=${getLabel(this.currentView) || 'Created'}
               current=${this.currentSource}
               @change=${this.onChangeSource}
-            ></start-discover-sources>
+            ></search-sources>
             ${this.currentView === 'follows'
               ? ''
-              : html`<start-discover-tags .current=${this.currentTag} .list=${this.tags} @change=${this.onChangeTag}></start-discover-tags>`}
+              : html`<search-tags .current=${this.currentTag} .list=${this.tags} @change=${this.onChangeTag}></search-tags>`}
           </div>
         </div>
       </div>
@@ -400,18 +402,18 @@ class Network extends LitElement {
     this.load()
   }
 
-  onKeyupSearch (e) {
-    let q = e.currentTarget.value
-    if (this.currentSearch !== q) {
-      this.currentSearch = q
+  onSubmitQuery (e) {
+    let q = e.detail.query
+    if (this.query !== q) {
+      this.query = q
       QP.setParams({q})
     }
   }
 
   onClearSearch (e) {
-    this.currentSearch = ''
-    this.shadowRoot.querySelector('#search').value = ''
+    this.query = ''
     QP.setParams({q: ''})
+    this.shadowRoot.querySelector('search-header').clearSearch()
   }
 
   onClickItemMenu (e, item) {
@@ -495,8 +497,8 @@ class Network extends LitElement {
     this.requestUpdate()
   }
 }
-Network.styles = discoverCSS
-customElements.define('start-discover', Network)
+SearchView.styles = searchCSS
+customElements.define('search-view', SearchView)
 
 function getConnections (profile) {
   return profile.followers.filter(f1 => profile.follows.find(f2 => f2.url === f1.url))
@@ -512,4 +514,10 @@ function isFollowed (profile, user) {
 
 function followsYou (profile, user) {
   return profile.follows.find(f => f.url === user.url)
+}
+
+function getLabel (view) {
+  if (view === 'bookmarks') return 'Bookmarked'
+  if (view === 'follows') return 'Followed'
+  return 'Created'
 }

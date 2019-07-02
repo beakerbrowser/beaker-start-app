@@ -3,8 +3,6 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 :host {
   display: block;
-  max-width: 600px;
-  margin: 0px auto 200px;
 }
 
 hr {
@@ -14,8 +12,6 @@ hr {
 }
 
 .expanded-post {
-  border: 1px solid #bbb;
-  border-radius: 4px;
   background: #fff;
 }
 

@@ -1,10 +1,10 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
-import discoverTagsCSS from '../../../css/com/discover/tags.css.js'
+import searchTagsCSS from '../../../css/com/search/tags.css.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
 
-class DiscoverTags extends LitElement {
+class SearchTags extends LitElement {
   static get properties () {
     return {
       current: {type: String},
@@ -55,5 +55,5 @@ class DiscoverTags extends LitElement {
     emit(this, 'change', {bubbles: true, detail: {tag}})
   }
 }
-DiscoverTags.styles = discoverTagsCSS
-customElements.define('start-discover-tags', DiscoverTags)
+SearchTags.styles = searchTagsCSS
+customElements.define('search-tags', SearchTags)

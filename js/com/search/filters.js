@@ -1,10 +1,10 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
-import discoverFiltersCSS from '../../../css/com/discover/filters.css.js'
+import searchFiltersCSS from '../../../css/com/search/filters.css.js'
 import '../hover-menu.js'
 import '../current-filter.js'
 
-class DiscoverFilters extends LitElement {
+class SearchFilters extends LitElement {
   static get properties () {
     return {
       sort: {type: 'String'},
@@ -70,5 +70,5 @@ class DiscoverFilters extends LitElement {
     emit(this, 'clear-search', {bubbles: true})
   }
 }
-DiscoverFilters.styles = discoverFiltersCSS
-customElements.define('start-discover-filters', DiscoverFilters)
+SearchFilters.styles = searchFiltersCSS
+customElements.define('search-filters', SearchFilters)

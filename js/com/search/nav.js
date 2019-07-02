@@ -1,9 +1,9 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
-import discoverNavCSS from '../../../css/com/discover/nav.css.js'
+import searchNavCSS from '../../../css/com/search/nav.css.js'
 
-class DiscoverNav extends LitElement {
+class SearchNav extends LitElement {
   static get properties () {
     return {
       current: {type: String},
@@ -36,8 +36,8 @@ class DiscoverNav extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div>
         ${item('bookmarks', 'far fa-star', 'Bookmarks')}
-        ${item('follows', 'far fa-user-circle', 'Followed sites')}
-        <div class="heading"><span class="fa-fw far fa-file-image""></span> <span class="label">Media</span></div>
+        ${item('follows', 'fas fa-rss', 'Following')}
+        ${item('media', 'far fa-file-image', 'Media')}
         <div class="sub">
           ${item('blogposts', false, 'Blog posts')}
           ${item('pages', false, 'Pages')}
@@ -62,5 +62,5 @@ class DiscoverNav extends LitElement {
     emit(this, 'change', {bubbles: true, detail: {view}})
   }
 }
-DiscoverNav.styles = discoverNavCSS
-customElements.define('start-discover-nav', DiscoverNav)
+SearchNav.styles = searchNavCSS
+customElements.define('search-nav', SearchNav)

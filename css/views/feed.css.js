@@ -3,33 +3,60 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 const cssStr = css`
 :host {
   display: block;
-  background: #fafafa;
 }
 
 .feed {
   display: none;
-  height: calc(100vh - 131px);
+  height: 100vh;
   overflow-y: scroll;
-  padding: 40px;
+  background: #fafafa;
 }
 
 .feed.visible {
   display: block;
 }
 
+.feed-inner {
+  background: #fff;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  width: 600px;
+  margin: 0 auto;
+  padding: 0 10px 200px;
+  min-height: 100vh;
+}
+
 .expanded-post {
-  height: calc(100vh - 91px);
+  height: 100vh;
   overflow-y: scroll;
-  padding: 20px;
+  background: #fafafa;
+}
+
+.expanded-post-inner {
+  background: #fff;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  width: 600px;
+  margin: 0 auto;
+  padding: 0 10px 200px;
+  min-height: 100vh;
 }
 
 beaker-feed-composer,
 beaker-feed-post {
   display: block;
   box-sizing: border-box;
-  width: 600px;
-  margin: 0 auto 10px;
-  --border-color: #bbb;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+beaker-feed-composer {
+  padding: 20px;
+}
+
+beaker-feed-post {
+  padding: 6px 0;
 }
 
 .empty {

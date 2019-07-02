@@ -18,24 +18,12 @@ ${tooltipCSS}
 .sources {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 10px;
+  grid-gap: 3px;
 }
 
 a {
   display: block;
   cursor: pointer;
-}
-
-a.textual {
-  grid-column: 1 / span 4;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  color: #555;
-}
-
-a.textual.current {
-  border: 2px solid #ddd;
-  background: #ddd;
 }
 
 .img-wrapper {
@@ -61,29 +49,18 @@ a.current .img-wrapper {
   border: 1px solid #aaa;
 }
 
+a.textual .img {
+  text-align: center;
+  line-height: 42px;
+  color: rgba(0, 0, 0, 0.66);
+}
+
 a:hover .img {
   border-color: #555;
 }
 
 a.current .img {
   border-color: #333;
-}
-
-a.textual .label {
-  border: 1px solid #d5d5d5;
-  border-radius: 4px;
-  padding: 6px 0;
-  background: #fff;
-}
-
-a.textual:hover .label {
-  border-color: gray;
-}
-
-a.textual.current .label {
-  border-color: gray;
-  background: #fff;
-  color: #333;
   font-weight: 500;
 }
 
@@ -99,11 +76,6 @@ a.textual.current .label {
 .img > span {
   font-size: 14px;
   line-height: 40px;
-}
-
-.label {
-  display: block;
-  text-align: center;
 }
 
 *[data-tooltip]:before {

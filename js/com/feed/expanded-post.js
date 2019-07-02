@@ -23,7 +23,6 @@ class ExpandedPost extends LitElement {
   // =
 
   render () {
-    console.log('render?')
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="expanded-post">

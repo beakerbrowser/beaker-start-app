@@ -1,10 +1,12 @@
 import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import buttonsCSS from '/vendor/beaker-app-stdlib/css/buttons2.css.js'
 import spinnerCSS from '/vendor/beaker-app-stdlib/css/com/spinner.css.js'
+import tooltipCSS from '/vendor/beaker-app-stdlib/css/tooltip.css.js'
 
 const cssStr = css`
 ${buttonsCSS}
 ${spinnerCSS}
+${tooltipCSS}
 
 .hidden {
   display: none;
@@ -18,94 +20,49 @@ h5 {
 }
 
 .header {
-  border-bottom: 1px solid #ccc;
-  height: 50px;
-}
-
-#nav {
   position: fixed;
-  top: 0px;
-  left: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 80px;
+  width: 452px;
   z-index: 1;
+  text-align: center;
 }
 
-#nav button .fa-fw {
-  color: gray;
+.header img {
+  display: block;
+  width: 100px;
+  margin: 0 auto 30px;
+}
+
+.nav button .fa-fw {
+  color: inherit;
   margin-right: 2px;
 }
 
-#nav button.radio {
+.nav button {
+  display: inline-block;
   cursor: pointer;
-  line-height: 49px;
-  padding: 0 16px;
+  line-height: 32px;
+  padding: 8px 14px 8px 16px;
   font-size: 13px;
-}
-
-#nav button.radio.pressed {
-  background: transparent;
-  color: inherit;
-  border-radius: 0;
-  line-height: 47px;
-  border-bottom: 2px solid var(--blue);
-}
-
-#nav button.radio:hover {
-  background: rgb(243, 245, 247);
-}
-
-#browser-links {
-  display: flex;
-  position: fixed;
-  top: 10px;
-  right: 30px;
-  z-index: 1;
-}
-#browser-links a {
-  position: relative;
-  margin-left: 15px;
-  border-radius: 4px;
-  text-align: center;
-  width: 28px;
-  height: 28px;
-}
-#browser-links a:hover,
-#browser-links a.active {
-  background: rgb(245, 247, 249);
-}
-#browser-links img,
-#browser-links .fas {
-  width: 16px;
-  height: 16px;
-  margin-top: 6px;
-}
-#browser-links a[href="beaker://history"] img {
-  position: relative;
-  left: -1px;
-}
-#browser-links .fas,
-#browser-links .spinner {
-  margin-top: 7px;
-  color: #34495e;
-}
-#browser-links .spinner {
-  width: 10px;
-  height: 10px;
-}
-#browser-links .user-profile img {
-  width: 28px;
-  height: 28px;
+  color: #555;
+  background: #f5f5f5;
   border-radius: 50%;
-  margin: 0;
+  margin: 0 30px;
 }
 
-.views {
-  height: calc(100vh - 51px);
-  overflow: hidden;
+.nav button[data-tooltip]:hover::before {
+  transform: translate(-50%, 20px);
+}
+
+.nav button[data-tooltip]::after {
+  top: 48px;
 }
 
 start-pinned-bookmarks {
   width: 460px;
-  margin: 12vh auto 20vh;
+  margin: 300px auto;
 }
 
 @media (min-width: 640px) {

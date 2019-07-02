@@ -1,4 +1,4 @@
-export function setParams (kv, clear = false, replaceState = false) {
+export function setParams (kv, clear = false, replaceState = true) {
   var url = (new URL(window.location))
   if (clear) url.search = ''
   for (var k in kv) {
