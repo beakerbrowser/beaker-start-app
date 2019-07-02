@@ -8,7 +8,7 @@ ${searchInputCSS}
 :host {
   display: flex;
   height: 30px;
-  padding: 15px 230px 5px;
+  padding: 15px 150px 5px;
   align-items: center;
 }
 

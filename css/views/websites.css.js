@@ -28,9 +28,9 @@ a:hover {
 }
 
 .left {
-  width: 220px;
+  width: 140px;
   box-sizing: border-box;
-  padding: 60px 10px 10px 70px;
+  padding: 0px 10px 10px 10px;
 }
 
 .center {
@@ -39,9 +39,9 @@ a:hover {
 }
 
 .right {
-  width: 220px;
+  width: 140px;
   box-sizing: border-box;
-  padding: 60px 70px 20px 20px;
+  padding: 0px 10px 20px 20px;
 }
 
 .right > * {
@@ -52,7 +52,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 16px 0;
+  margin: 5px 0 15px;
 }
 
 websites-filters {
@@ -108,8 +108,7 @@ websites-filters {
 }
 
 .item-left {
-  padding: 6px 0 6px 8px;
-  align-self: center;
+  padding: 6px;
 }
 
 .item-center {
@@ -126,10 +125,11 @@ websites-filters {
 
 .item img {
   display: block;
-  width: 60px;
-  height: 60px;
-  border-radius: 4px;
+  width: 100px;
+  height: 80px;
   object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #a4a4a4;
 }
 
 .item .title {

@@ -36,8 +36,8 @@ class WebsitesWritableFilter extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div class="heading"><span class="fas fa-pencil-alt"></span> Filter by:</div>
       <div class="tags">
-        ${item('writable', 'Can edit')}
-        ${item('readonly', 'Readonly')}
+        ${item('writable', 'Editable')}
+        ${item('readonly', 'Read-only')}
       </div>
     `
   }

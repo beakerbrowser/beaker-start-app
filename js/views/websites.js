@@ -26,6 +26,7 @@ class WebsitesView extends LitElement {
   constructor () {
     super()
 
+    this.me = null
     this.currentCategory = ''
     this.currentType = ''
     this.currentQuery = ''
@@ -44,8 +45,16 @@ class WebsitesView extends LitElement {
   }
 
   async load () {
+    this.me = await beaker.users.getCurrent()
+
     // fetch listing
     var items = await beaker.archives.list({type: SITE_TYPES[this.currentType]})
+
+    // HACK
+    // sometimes new archives wont have an mtime yet
+    items.forEach(item => {
+      if (!item.mtime) item.mtime = Date.now()
+    })
 
     // apply filters
     if (this.currentType === 'websites') {
@@ -121,7 +130,7 @@ class WebsitesView extends LitElement {
             ></websites-filters>
             ${isViewingTrash
               ? html`<button class="primary" @click=${this.onEmptyTrash}><span class="fas fa-fw fa-trash"></span> Empty trash</button>`
-              : html`<button class="primary"><span class="fas fa-fw fa-plus"></span> New ${SITE_TYPES_SINGULAR[this.currentType]}</button>`}
+              : html`<button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New ${SITE_TYPES_SINGULAR[this.currentType]}</button>`}
           </div>
           ${!items.length
             ? html`<div class="empty"><div><span class="${isViewingTrash ? 'fas fa-trash' : 'far fa-sad-tear'}"></span></div>No ${this.currentType} found.</div>`
@@ -144,14 +153,17 @@ class WebsitesView extends LitElement {
     return html`
       <div class="item" @contextmenu=${e => this.onContextMenuSite(e, item)}>
         <div class="item-left">
-          <img src="asset:thumb:${item.url}">
+          <img src="asset:thumb:${item.url}?cache_buster=${Date.now()}">
         </div>
         <div class="item-center">
           <div class="ctrls">
             <button @click=${e => { window.location = `beaker://editor/${item.url}` }}><span class="far fa-fw fa-edit"></span> Site Editor</button>
             <button @click=${e => this.onClickItemMenu(e, item)}><span class="fas fa-fw fa-ellipsis-h"></span></button>
           </div>
-          <div class="title"><a href=${item.url}>${item.title}</a></div>
+          <div class="title">
+            <a href=${item.url}>${item.title}</a>
+            ${item.url === this.me.url ? html`<span class="label">This is you!</span>` : ''}
+          </div>
           ${item.description ? html`<div class="description">${item.description}</div>` : ''}
           ${item.userSettings.localSyncPath ? html`<div class="local-sync-path">${item.userSettings.localSyncPath}</div>` : ''}
           <div class="url"><a href=${item.url}>${toNiceUrl(item.url)}</a></div>
@@ -233,6 +245,11 @@ class WebsitesView extends LitElement {
     this.showMenu(item, rect.right + 4, rect.bottom + 8, false)
   }
 
+  async onClickNew () {
+    await DatArchive.create({type: SITE_TYPES[this.currentType]})
+    this.load()
+  }
+
   async onEmptyTrash () {
     if (!confirm('Empty your trash? This will delete the sites from you computer.')) {
       return
@@ -244,23 +261,32 @@ class WebsitesView extends LitElement {
   showMenu (item, x, y, isContextMenu) {
     var items = [
       {icon: 'fas fa-fw fa-external-link-alt', label: 'Open in new tab', click: () => window.open(item.url) },
-      {icon: 'far fa-edit', label: 'Open with Site Editor', click: () => { window.location = `beaker://editor/${item.url}` }},
+      {icon: 'far fa-edit', label: 'Site Editor', click: () => { window.location = `beaker://editor/${item.url}` }},
       {icon: 'fas fa-fw fa-link', label: 'Copy URL', click: () => {
         writeToClipboard(item.url)
         toast.create('Copied to your clipboard')
       }},
-      '-'
+      '-',
+      {icon: 'fas fa-fw fa-code-branch', label: 'Fork this site', click: async () => {
+        await DatArchive.fork(item.url)
+        this.load()
+      }}
     ]
-    if (item.userSettings.isSaved) {
-      items.push({icon: 'fas fa-trash', label: 'Move to trash', click: async () => {
-        await beaker.archives.remove(item.url)
-        this.load()
-      }})
-    } else {
-      items.push({icon: 'fas fa-undo', label: 'Restore from trash', click: async () => {
-        await beaker.archives.add(item.url)
-        this.load()
-      }})
+    if (item.url !== this.me.url) {
+      items.push('-')
+      if (item.userSettings.isSaved) {
+        items.push({icon: 'fas fa-trash', label: 'Move to trash', click: async () => {
+          await beaker.archives.remove(item.url)
+          toast.create('Moved to trash')
+          this.load()
+        }})
+      } else {
+        items.push({icon: 'fas fa-undo', label: 'Restore from trash', click: async () => {
+          await beaker.archives.add(item.url)
+          toast.create('Restored')
+          this.load()
+        }})
+      }
     }
   
     contextMenu.create({
