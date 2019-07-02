@@ -7,7 +7,7 @@ import { toNiceUrl } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as QP from '../lib/query-params.js'
-import { SITE_TYPES, SITE_TYPES_SINGULAR, getTypeLabel, getTypeIcon } from '../lib/site-types.js'
+import { SITE_TYPES, getTypeCategory, getTypeLabel, getTypeIcon } from '../lib/site-types.js'
 import websitesCSS from '../../../css/views/websites.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
 import '../com/websites/header.js'
@@ -130,7 +130,7 @@ class WebsitesView extends LitElement {
             ></websites-filters>
             ${isViewingTrash
               ? html`<button class="primary" @click=${this.onEmptyTrash}><span class="fas fa-fw fa-trash"></span> Empty trash</button>`
-              : html`<button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New ${SITE_TYPES_SINGULAR[this.currentType]}</button>`}
+              : html`<button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New Website</button>`}
           </div>
           ${!items.length
             ? html`<div class="empty"><div><span class="${isViewingTrash ? 'fas fa-trash' : 'far fa-sad-tear'}"></span></div>No ${this.currentType} found.</div>`
@@ -246,7 +246,13 @@ class WebsitesView extends LitElement {
   }
 
   async onClickNew () {
-    await DatArchive.create({type: SITE_TYPES[this.currentType]})
+    var archive = await DatArchive.create()
+    toast.create('Website created')
+
+    // go to the type view for the new site
+    var info = await archive.getInfo()
+    this.currentType = getTypeCategory(info.type)
+    QP.setParams({type: this.currentType})
     this.load()
   }
 

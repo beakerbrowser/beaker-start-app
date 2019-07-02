@@ -16,6 +16,15 @@ export const SITE_TYPES_SINGULAR = {
   themes: 'theme'
 }
 
+export function getTypeCategory (type) {
+  if (type.includes('unwalled.garden/person')) return 'people'
+  if (type.includes('unwalled.garden/application')) return 'applications'
+  if (type.includes('unwalled.garden/module')) return 'modules'
+  if (type.includes('unwalled.garden/template')) return 'templates'
+  if (type.includes('unwalled.garden/theme')) return 'themes'
+  return 'websites'
+}
+
 export function getTypeLabel (type) {
   if (type.includes('unwalled.garden/person')) return 'Person'
   if (type.includes('unwalled.garden/application')) return 'Application'
