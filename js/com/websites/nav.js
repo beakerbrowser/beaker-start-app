@@ -1,9 +1,9 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
-import websitesTypesCSS from '../../../css/com/websites/types.css.js'
+import websitesNavCSS from '../../../css/com/websites/nav.css.js'
 
-class WebsitesTypes extends LitElement {
+class WebsitesNav extends LitElement {
   static get properties () {
     return {
       current: {type: String}
@@ -39,6 +39,9 @@ class WebsitesTypes extends LitElement {
         ${item('modules', 'fas fa-cube', 'Modules')}
         ${item('templates', 'fas fa-pencil-ruler', 'Templates')}
         ${item('themes', 'fas fa-drafting-compass', 'Themes')}
+        <hr>
+        ${item('trash', 'fas fa-trash', 'Trash')}
+        <hr>
       </div>
     `
   }
@@ -46,10 +49,10 @@ class WebsitesTypes extends LitElement {
   // events
   // =
 
-  onClick (e, type) {
+  onClick (e, view) {
     e.preventDefault()
-    emit(this, 'change', {bubbles: true, detail: {type}})
+    emit(this, 'change', {bubbles: true, detail: {view}})
   }
 }
-WebsitesTypes.styles = websitesTypesCSS
-customElements.define('websites-types', WebsitesTypes)
+WebsitesNav.styles = websitesNavCSS
+customElements.define('websites-nav', WebsitesNav)

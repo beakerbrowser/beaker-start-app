@@ -6,6 +6,7 @@ ${colorsCSS}
 
 :host {
   display: block;
+  padding: 0 12px;
 }
 
 .heading {
@@ -17,8 +18,7 @@ a {
   display: inline-block;
   cursor: pointer;
   color: var(--color-text--muted);
-  font-size: 14px;
-  padding: 2px 0;
+  padding: 4px 16px;
 }
 
 a:hover {

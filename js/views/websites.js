@@ -10,8 +10,7 @@ import * as QP from '../lib/query-params.js'
 import { SITE_TYPES, getTypeCategory, getTypeLabel, getTypeIcon } from '../lib/site-types.js'
 import websitesCSS from '../../../css/views/websites.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
-import '../com/websites/header.js'
-import '../com/websites/types.js'
+import '../com/websites/nav.js'
 import '../com/websites/writable-filter.js'
 import '../com/websites/filters.js'
 
@@ -27,8 +26,7 @@ class WebsitesView extends LitElement {
     super()
 
     this.me = null
-    this.currentCategory = ''
-    this.currentType = ''
+    this.currentView = ''
     this.currentQuery = ''
     this.currentSort = ''
     this.currentWritableFilter = ''
@@ -37,8 +35,7 @@ class WebsitesView extends LitElement {
 
   reset () {
     document.title = 'My Websites'
-    this.currentCategory = QP.getParam('category', 'saved')
-    this.currentType = QP.getParam('type', 'websites')
+    this.currentView = QP.getParam('view', 'websites')
     this.currentQuery = QP.getParam('q', '')
     this.currentSort = QP.getParam('sort', 'recent')
     this.currentWritableFilter = QP.getParam('writable', '')
@@ -48,7 +45,8 @@ class WebsitesView extends LitElement {
     this.me = await beaker.users.getCurrent()
 
     // fetch listing
-    var items = await beaker.archives.list({type: SITE_TYPES[this.currentType]})
+    var type = this.currentView === 'trash' ? undefined : SITE_TYPES[this.currentView]
+    var items = await beaker.archives.list({type, isSaved: this.currentView !== 'trash'})
 
     // HACK
     // sometimes new archives wont have an mtime yet
@@ -57,7 +55,7 @@ class WebsitesView extends LitElement {
     })
 
     // apply filters
-    if (this.currentType === 'websites') {
+    if (this.currentView === 'websites') {
       // manually filter out known other types
       let knownTypes = Object.values(SITE_TYPES).filter(Boolean)
       items = items.filter(item => !item.type.find(t => knownTypes.includes(t)))
@@ -67,16 +65,7 @@ class WebsitesView extends LitElement {
     } else if (this.currentWritableFilter === 'writable') {
       items = items.filter(item => item.isOwner)
     }
-    if (this.currentCategory === 'saved') {
-      items = items.filter(item => item.userSettings.isSaved)
-    } else if (this.currentCategory === 'hosting') {
-      // TODO
-    } else if (this.currentCategory === 'published') {
-      // TODO      
-    } else if (this.currentCategory === 'trash') {
-      items = items.filter(item => !item.userSettings.isSaved)      
-    }
-
+    
     // apply sort
     if (this.currentSort === 'alphabetical') {
       items.sort((a, b) => a.title.localeCompare(b.title))
@@ -105,18 +94,20 @@ class WebsitesView extends LitElement {
       ))
     }
     
-    const isViewingTrash = this.currentCategory === 'trash'
+    const isViewingTrash = this.currentView === 'trash'
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <websites-header
-        category=${this.currentCategory}
-        query=${this.currentQuery}
-        @change-category=${this.onChangeCategory}
-        @change-query=${this.onChangeQuery}
-      ></websites-header>
       <div class="layout">
         <div class="left">
-          <websites-types current=${this.currentType} @change=${this.onChangeType}></websites-types>
+          <div class="search-container">
+            <input @keyup=${this.onKeyupQuery} placeholder="Search" class="search" value=${this.currentQuery} />
+            <i class="fa fa-search"></i>
+          </div>
+          <websites-nav current=${this.currentView} @change=${this.onChangeView}></websites-nav>
+          <websites-writable-filter
+            current=${this.currentWritableFilter}
+            @change=${this.onChangeWritableFilter}
+          ></websites-writable-filter>
         </div>
         <div class="center">
           <div class="center-header">
@@ -133,17 +124,11 @@ class WebsitesView extends LitElement {
               : html`<button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New Website</button>`}
           </div>
           ${!items.length
-            ? html`<div class="empty"><div><span class="${isViewingTrash ? 'fas fa-trash' : 'far fa-sad-tear'}"></span></div>No ${this.currentType} found.</div>`
+            ? html`<div class="empty"><div><span class="${isViewingTrash ? 'fas fa-trash' : 'far fa-sad-tear'}"></span></div>No ${this.currentView} found.</div>`
             : ''}
           <div class="listing">
             ${repeat(items, item => this.renderItem(item))}
           </div>
-        </div>
-        <div class="right">
-          <websites-writable-filter
-            current=${this.currentWritableFilter}
-            @change=${this.onChangeWritableFilter}
-          ></websites-writable-filter>
         </div>
       </div>
     `
@@ -192,15 +177,15 @@ class WebsitesView extends LitElement {
     this.load()
   }
 
-  onChangeType (e) {
-    this.currentType = e.detail.type
-    QP.setParams({type: this.currentType})
+  onChangeView (e) {
+    this.currentView = e.detail.view
+    QP.setParams({view: this.currentView})
     this.load()
   }
 
   onClearType (e) {
-    this.currentType = undefined
-    QP.setParams({type: this.currentType})
+    this.currentView = undefined
+    QP.setParams({type: this.currentView})
     this.load()
   }
 
@@ -216,8 +201,8 @@ class WebsitesView extends LitElement {
     this.load()
   }
 
-  onChangeQuery (e) {
-    let q = e.detail.query
+  onKeyupQuery (e) {
+    let q = e.currentTarget.value
     if (this.currentQuery !== q) {
       this.currentQuery = q
       QP.setParams({q})
@@ -227,7 +212,7 @@ class WebsitesView extends LitElement {
   onClearQuery (e) {
     this.currentQuery = ''
     QP.setParams({q: ''})
-    this.shadowRoot.querySelector('websites-header').clearSearch()
+    this.shadowRoot.querySelector('input').value = ''
   }
 
   onContextMenuSite (e, item) {
@@ -251,8 +236,8 @@ class WebsitesView extends LitElement {
 
     // go to the type view for the new site
     var info = await archive.getInfo()
-    this.currentType = getTypeCategory(info.type)
-    QP.setParams({type: this.currentType})
+    this.currentView = getTypeCategory(info.type)
+    QP.setParams({type: this.currentView})
     this.load()
   }
 

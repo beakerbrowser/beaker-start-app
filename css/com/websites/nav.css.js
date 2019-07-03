@@ -39,5 +39,10 @@ a.current {
 .no-icon {
   display: inline-block;
 }
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
 `
 export default cssStr

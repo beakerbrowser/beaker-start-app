@@ -41,7 +41,7 @@ class Bookmarksview extends LitElement {
     }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <h2>My Bookmarks</h2>
+      <h2><span class="far fa-star"></span></h2>
       <div class="bookmarks">
         ${repeat(this.bookmarks, b => b, b => html`
           <a

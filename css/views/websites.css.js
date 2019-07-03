@@ -2,11 +2,13 @@ import {css} from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import colorsCSS from '/vendor/beaker-app-stdlib/css/colors.css.js'
 import buttonsCSS from '/vendor/beaker-app-stdlib/css/buttons2.css.js'
 import tooltipCSS from '/vendor/beaker-app-stdlib/css/tooltip.css.js'
+import searchInputCSS from '/vendor/beaker-app-stdlib/css/com/search-input.css.js'
 
 const cssStr = css`
 ${colorsCSS}
 ${buttonsCSS}
 ${tooltipCSS}
+${searchInputCSS}
 
 :host {
   display: block;
@@ -25,10 +27,11 @@ a:hover {
 
 .layout {
   display: flex;
+  margin-top: 10px;
 }
 
 .left {
-  width: 140px;
+  width: 180px;
   box-sizing: border-box;
   padding: 0px 10px 10px 10px;
 }
@@ -38,14 +41,8 @@ a:hover {
   margin-right: 10px;
 }
 
-.right {
-  width: 140px;
-  box-sizing: border-box;
-  padding: 0px 10px 20px 20px;
-}
-
-.right > * {
-  margin: 0 0 30px;
+.left > * {
+  margin: 0 0 20px;
 }
 
 .center-header {
@@ -55,7 +52,26 @@ a:hover {
   margin: 5px 0 15px;
 }
 
-websites-filters {
+.search-container {
+  position: relative;
+  margin: 4px 0 10px;
+  height: 34px;
+}
+
+input.search {
+  font-size: 14px;
+  border: 1px solid #ddd;
+  outline: 0;
+  box-sizing: border-box;
+  width: 150px;
+  height: 34px;
+  border-radius: 18px;
+  padding-left: 38px;
+}
+
+i.fa-search {
+  top: 12px;
+  font-size: 14px;
 }
 
 .label {
@@ -118,7 +134,7 @@ websites-filters {
 
 .item-right {
   padding: 10px 12px 8px 0;
-  width: 110px;
+  width: 120px;
   color: var(--color-text--muted);
   line-height: 21px;
 }
