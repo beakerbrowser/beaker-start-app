@@ -1,5 +1,6 @@
 import './com/blue-notice.js'
 import './views/pinned-bookmarks.js'
+import './views/applications.js'
 import './views/bookmarks.js'
 import './views/websites.js'
 import './views/search.js'
@@ -14,7 +15,7 @@ import mainCSS from '../css/main.css.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
-const VIEWS = ['pins', 'bookmarks', 'apps', 'websites', 'search']
+const VIEWS = ['pins', 'bookmarks', 'applications', 'websites', 'search']
 
 export class StartApp extends LitElement {
   static get properties() {
@@ -112,7 +113,7 @@ export class StartApp extends LitElement {
           <img src="beaker://assets/logo">
           <div class="nav">
             ${navItem('bookmarks', 'My Bookmarks', 'far fa-star')}
-            ${navItem('apps', 'My Applications', 'far fa-window-restore')}
+            ${navItem('applications', 'My Applications', 'far fa-window-restore')}
             ${navItem('websites', 'My Websites', 'fas fa-sitemap')}
             ${navItem('search', 'Search', 'fas fa-search')}
           </div>
@@ -124,7 +125,7 @@ export class StartApp extends LitElement {
 
   renderView () {
     if (this.view === 'bookmarks') return html`<bookmarks-view></bookmarks-view>`
-    if (this.view === 'apps') return html`<div>todo</div>`
+    if (this.view === 'applications') return html`<applications-view></applications-view>`
     if (this.view === 'websites') return html`<websites-view></websites-view>`
     if (this.view === 'search') return html`<search-view></search-view>`
     return html`<start-pinned-bookmarks></start-pinned-bookmarks>`    

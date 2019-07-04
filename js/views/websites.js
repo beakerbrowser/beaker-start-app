@@ -13,6 +13,9 @@ import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
 import '../com/websites/nav.js'
 import '../com/websites/writable-filter.js'
 import '../com/websites/filters.js'
+import { getNicePhrase } from '../lib/nice-phrases.js'
+
+const NICE_PHRASE = getNicePhrase()
 
 class WebsitesView extends LitElement {
   static get properties () {
@@ -131,6 +134,7 @@ class WebsitesView extends LitElement {
           </div>
         </div>
       </div>
+      <div class="nice-phrase">${NICE_PHRASE}</div>
     `
   }
 

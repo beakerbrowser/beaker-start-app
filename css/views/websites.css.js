@@ -104,10 +104,6 @@ i.fa-search {
   color: #bbb;
 }
 
-.listing {
-  padding-bottom: 100px;
-}
-
 .item {
   display: flex;
   border-top: 1px solid #eee;
@@ -188,5 +184,11 @@ i.fa-search {
   color: inherit;
 }
 
+.nice-phrase {
+  margin: 30px;
+  font-weight: 300;
+  color: #bbb;
+  text-align: center;
+}
 `
 export default cssStr

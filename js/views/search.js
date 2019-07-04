@@ -101,7 +101,11 @@ class SearchView extends LitElement {
       authors = [this.user.url].concat(followedUsers.map(({topic}) => topic.url))
     } else {
       authors = this.currentSource
-      this.currentSourceTitle = (await profiles.get(authors)).title
+      try {
+        this.currentSourceTitle = (await profiles.get(authors)).title
+      } catch (e) {
+        this.currentSourceTitle = authors
+      }
     }
     this.authors = authors
 

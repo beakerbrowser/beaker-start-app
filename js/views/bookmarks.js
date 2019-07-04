@@ -8,8 +8,11 @@ import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
 import { bookmarks } from '../tmp-beaker.js'
 import bookmarksCSS from '../../css/views/bookmarks.css.js'
+import { getNicePhrase } from '../lib/nice-phrases.js'
 
-class Bookmarksview extends LitElement {
+const NICE_PHRASE = getNicePhrase()
+
+class BookmarksView extends LitElement {
   static get properties() {
     return {
       bookmarks: {type: Array}
@@ -57,7 +60,7 @@ class Bookmarksview extends LitElement {
           </a>
         `)}
       </div>
-      </div>
+      <div class="nice-phrase">${NICE_PHRASE}</div>
     `
   }
 
@@ -128,6 +131,6 @@ class Bookmarksview extends LitElement {
 // styles
 // =
 
-Bookmarksview.styles = bookmarksCSS
+BookmarksView.styles = bookmarksCSS
 
-customElements.define('bookmarks-view', Bookmarksview);
+customElements.define('bookmarks-view', BookmarksView);

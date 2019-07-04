@@ -60,5 +60,12 @@ h2 {
   width: 200px;
   color: gray;
 }
+
+.nice-phrase {
+  margin: 30px;
+  font-weight: 300;
+  color: #bbb;
+  text-align: center;
+}
 `
 export default cssStr
