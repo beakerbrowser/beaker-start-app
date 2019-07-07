@@ -45,6 +45,7 @@ h2 {
   border-radius: 4px;
   padding: 16px;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .application:hover {

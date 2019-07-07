@@ -59,7 +59,7 @@ a:hover {
 }
 
 input.search {
-  font-size: 14px;
+  font-size: 13px;
   border: 1px solid #ddd;
   outline: 0;
   box-sizing: border-box;
@@ -69,9 +69,9 @@ input.search {
   padding-left: 38px;
 }
 
-i.fa-search {
-  top: 12px;
-  font-size: 14px;
+.search-container > i.fa-search  {
+  top: 11px;
+  font-size: 13px;
 }
 
 .label {

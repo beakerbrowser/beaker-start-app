@@ -152,6 +152,7 @@ class WebsitesView extends LitElement {
           <div class="title">
             <a href=${item.url}>${item.title}</a>
             ${item.url === this.me.url ? html`<span class="label">This is you!</span>` : ''}
+            ${item.isOwner ? '' : html`<span class="label">Read-only</span>`}
           </div>
           ${item.description ? html`<div class="description">${item.description}</div>` : ''}
           ${item.userSettings.localSyncPath ? html`<div class="local-sync-path">${item.userSettings.localSyncPath}</div>` : ''}
@@ -160,7 +161,6 @@ class WebsitesView extends LitElement {
         <div class="item-right">
           <div><span class="fa-fw ${getTypeIcon(item.type)}"></span> ${getTypeLabel(item.type)}</div>
           <div><span class="far fa-fw fa-clock"></span> ${timeDifference(item.mtime)}</div>
-          ${item.isOwner ? '' : html`<div><span class="label">Read-only</span></div>`}
         </div>
       </div>
     `

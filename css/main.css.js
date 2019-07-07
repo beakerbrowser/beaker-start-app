@@ -20,10 +20,10 @@ h5 {
 }
 
 .header {
-  position: fixed;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 80px;
+  top: 0px;
   width: 452px;
   z-index: 1;
   text-align: center;
@@ -60,30 +60,40 @@ h5 {
   top: 48px;
 }
 
+.start-view-wrapper {
+  position: relative;
+  margin: 10vh auto 0;
+  padding-top: 220px;
+  width: 460px;
+}
+
 start-pinned-bookmarks {
   width: 460px;
-  margin: 300px auto;
 }
 
 @media (min-width: 640px) {
+  .start-view-wrapper,
   start-pinned-bookmarks {
     width: 580px;
   }
 }
 
 @media (min-width: 740px) {
+  .start-view-wrapper,
   start-pinned-bookmarks {
     width: 700px;
   }
 }
 
 @media (min-width: 900px) {
+  .start-view-wrapper,
   start-pinned-bookmarks {
     width: 830px;
   }
 }
 
 @media (min-width: 1100px) {
+  .start-view-wrapper,
   start-pinned-bookmarks {
     width: 950px;
   }

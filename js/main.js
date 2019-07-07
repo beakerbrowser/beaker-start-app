@@ -81,7 +81,6 @@ export class StartApp extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      ${this.renderHeader()}
       <div class="views" @set-view=${this.onSetView}>${this.renderView()}</div>
     `
   }
@@ -101,9 +100,8 @@ export class StartApp extends LitElement {
 
   renderHeader () {
     const navItem = (v, label, icon) => {
-      const cls = classMap({transparent: true, 'tooltip-nodelay': true})
       return html`
-        <button class="${cls}" @click=${e => this.setView(v)} title=${label} data-tooltip=${label}>
+        <button class="transparent tooltip-nodelay" @click=${e => this.setView(v)} title=${label} data-tooltip=${label}>
           <span class="fa-fw ${icon}"></span>
         </button>`
     }
@@ -128,7 +126,12 @@ export class StartApp extends LitElement {
     if (this.view === 'applications') return html`<applications-view></applications-view>`
     if (this.view === 'websites') return html`<websites-view></websites-view>`
     if (this.view === 'search') return html`<search-view></search-view>`
-    return html`<start-pinned-bookmarks></start-pinned-bookmarks>`    
+    return html`
+      <div class="start-view-wrapper">
+        ${this.renderHeader()}
+        <start-pinned-bookmarks></start-pinned-bookmarks>
+      </div>
+    `
   }
 
   // events
