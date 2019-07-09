@@ -36,7 +36,6 @@ class WebsitesNav extends LitElement {
         ${item('websites', 'fas fa-sitemap', 'Websites')}
         ${item('people', 'far fa-user', 'People')}
         ${item('applications', 'far fa-window-restore', 'Applications')}
-        ${item('modules', 'fas fa-cube', 'Modules')}
         ${item('templates', 'fas fa-pencil-ruler', 'Templates')}
         ${item('themes', 'fas fa-drafting-compass', 'Themes')}
         <hr>
