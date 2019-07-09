@@ -19,7 +19,7 @@ import '../com/search/filters.js'
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 const bookmarks = navigator.importSystemAPI('bookmarks')
 const follows = navigator.importSystemAPI('unwalled-garden-follows')
-const media = navigator.importSystemAPI('unwalled-garden-media')
+// const media = navigator.importSystemAPI('unwalled-garden-media') TODO readd when stablized -prf
 const tagsAPI = navigator.importSystemAPI('unwalled-garden-tags')
 const votes = navigator.importSystemAPI('unwalled-garden-votes')
 
@@ -34,18 +34,19 @@ const FOLLOW_SORT_OPTIONS = {
   alphabetical: 'Alphabetical'
 }
 
-const MEDIA_TYPES = {
-  blogposts: 'blogpost',
-  pages: 'page',
-  podcasts: 'podcast',
-  gifs: 'gif',
-  images: 'image',
-  music: 'music',
-  videos: 'video',
-  documents: 'document',
-  ebooks: 'ebook',
-  files: 'file'
-}
+// TODO readd when stablized -prf
+// const MEDIA_TYPES = {
+//   blogposts: 'blogpost',
+//   pages: 'page',
+//   podcasts: 'podcast',
+//   gifs: 'gif',
+//   images: 'image',
+//   music: 'music',
+//   videos: 'video',
+//   documents: 'document',
+//   ebooks: 'ebook',
+//   files: 'file'
+// }
 
 class SearchView extends LitElement {
   static get properties () {
@@ -127,9 +128,10 @@ class SearchView extends LitElement {
         profile.follows = (await follows.list({filters: {authors: profile.url}})).map(({topic}) => topic)
       }))
     } else {
-      let subtypes = this.currentView !== 'media' ? `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}` : undefined
-      items = (await media.list({filters: {authors, subtypes, tags: this.currentTag}}))
-      tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
+      // TODO readd when stablized -prf
+      // let subtypes = this.currentView !== 'media' ? `unwalled.garden/media#${MEDIA_TYPES[this.currentView]}` : undefined
+      // items = (await media.list({filters: {authors, subtypes, tags: this.currentTag}}))
+      // tags = await tagsAPI.listMediaTags({filters: {authors, subtypes}})
     }
     tags.sort((a, b) => b.count - a.count)
 
@@ -170,13 +172,14 @@ class SearchView extends LitElement {
     this.tags = tags
     console.log('loaded', this.items)
 
+    // TODO readd when stablized -prf
     // load counts on all media types
-    var counts = {}
-    for (let k in MEDIA_TYPES) {
-      let subtypes = `unwalled.garden/media#${MEDIA_TYPES[k]}`
-      counts[k] = (await media.list({filters: {authors, subtypes}})).length
-    }
-    this.counts = counts
+    // var counts = {}
+    // for (let k in MEDIA_TYPES) {
+    //   let subtypes = `unwalled.garden/media#${MEDIA_TYPES[k]}`
+    //   counts[k] = (await media.list({filters: {authors, subtypes}})).length
+    // }
+    // this.counts = counts
   }
 
   // rendering
@@ -473,7 +476,8 @@ class SearchView extends LitElement {
       if (this.currentView === 'bookmarks') {
         await bookmarks.remove(item.href)
       } else {
-        await media.remove(item.url)
+        // TODO readd when stablized -prf
+        // await media.remove(item.url)
       }
     } catch (e) {
       alert('Something went wrong. Please let the Beaker team know! (An error is logged in the console.)')

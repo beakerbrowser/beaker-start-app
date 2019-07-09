@@ -37,7 +37,7 @@ class SearchNav extends LitElement {
       <div>
         ${item('bookmarks', 'far fa-star', 'Bookmarks')}
         ${item('follows', 'fas fa-rss', 'Following')}
-        ${item('media', 'far fa-file-image', 'Media')}
+        ${''/* TODO re-enable when media stablizes -prf item('media', 'far fa-file-image', 'Media')}
         <div class="sub">
           ${item('blogposts', false, 'Blog posts')}
           ${item('pages', false, 'Pages')}
@@ -49,7 +49,7 @@ class SearchNav extends LitElement {
           ${item('documents', false, 'Documents')}
           ${item('ebooks', false, 'E-books')}
           ${item('files', false, 'Files')}
-        </div>
+        </div>*/}
       </div>
     `
   }
