@@ -32,10 +32,11 @@ ${commonCSS}
   outline: 3px dashed var(--border-color);
 }
 
-.pinned-bookmark .favicon {
+.pinned-bookmark .thumb {
   margin-top: 30px;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  object-fit: scale-down;
 }
 
 .pinned-bookmark .title {
