@@ -139,7 +139,7 @@ input.search {
   display: block;
   width: 100px;
   height: 80px;
-  object-fit: cover;
+  object-fit: scale-down;
   border-radius: 4px;
   border: 1px solid #a4a4a4;
 }
