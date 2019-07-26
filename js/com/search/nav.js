@@ -36,7 +36,7 @@ class SearchNav extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div>
         ${item('bookmarks', 'far fa-star', 'Bookmarks')}
-        ${item('follows', 'fas fa-rss', 'Following')}
+        ${item('follows', 'fas fa-rss', 'Follows')}
         ${''/* TODO re-enable when media stablizes -prf item('media', 'far fa-file-image', 'Media')}
         <div class="sub">
           ${item('blogposts', false, 'Blog posts')}

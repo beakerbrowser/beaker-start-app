@@ -8,19 +8,24 @@ ${colorsCSS}
   display: block;
 }
 
+:host > div {
+  display: flex;
+}
+
 a,
 .heading {
   display: block;
-  padding: 12px 10px;
+  padding: 10px 10px;
 }
 
 a {
   cursor: pointer;
-  border-radius: 4px;
+  border-bottom: 3px solid transparent;
+  margin-right: 10px;
 }
 
 a:hover {
-  background: #f5f5f5;
+  color: var(--blue);
 }
 
 .heading {
@@ -34,6 +39,7 @@ a:hover {
 
 a.current {
   color: var(--blue);
+  border-bottom: 3px solid var(--blue);
 }
 
 .no-icon {

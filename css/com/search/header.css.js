@@ -6,12 +6,15 @@ const cssStr = css`
 ${commonCSS}
 ${searchInputCSS}
 :host {
-  display: flex;
-  background: #f5f5f5;
-  height: 50px;
-  padding: 10px 20px;
-  align-items: center;
+  display: block;
+  padding: 10px 20px 0;
   border-bottom: 1px solid #ddd;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  height: 50px;
 }
 
 img.brand {
@@ -51,5 +54,8 @@ i.fa-search {
   top: 12px;
 }
 
+search-nav {
+  margin-left: 70px;
+}
 `
 export default cssStr

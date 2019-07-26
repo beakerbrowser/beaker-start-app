@@ -201,13 +201,15 @@ class SearchView extends LitElement {
     
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <search-header @submit-query=${this.onSubmitQuery} query=${this.query}></search-header>
+      <search-header
+        query=${this.query}
+        .counts=${this.counts}
+        current=${this.currentView}
+        @change=${this.onChangeView}
+        @submit-query=${this.onSubmitQuery}
+      ></search-header>
       <div class="layout">
-        <div class="nav">
-          <search-nav .counts=${this.counts} current=${this.currentView} @change=${this.onChangeView}></search-nav>
-        </div>
         <div class="content">
-          <div class="content-center">
           ${this.currentView === 'follows'
             ? html`
               <search-filters
@@ -245,17 +247,16 @@ class SearchView extends LitElement {
                 ${repeat(items, item => this.renderItem(item))}
               </div>
               `}
-          </div>
-          <div class="content-right">
-            <search-sources
-              label=${getLabel(this.currentView) || 'Created'}
-              current=${this.currentSource}
-              @change=${this.onChangeSource}
-            ></search-sources>
-            ${this.currentView === 'follows'
-              ? ''
-              : html`<search-tags .current=${this.currentTag} .list=${this.tags} @change=${this.onChangeTag}></search-tags>`}
-          </div>
+        </div>
+        <div class="nav">
+          <search-sources
+            label=${getLabel(this.currentView) || 'Created'}
+            current=${this.currentSource}
+            @change=${this.onChangeSource}
+          ></search-sources>
+          ${this.currentView === 'follows'
+            ? ''
+            : html`<search-tags .current=${this.currentTag} .list=${this.tags} @change=${this.onChangeTag}></search-tags>`}
         </div>
       </div>
     `

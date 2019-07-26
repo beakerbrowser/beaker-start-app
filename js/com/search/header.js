@@ -6,7 +6,9 @@ import searchHeaderCSS from '../../../css/com/search/header.css.js'
 class SearchHeader extends LitElement {
   static get properties () {
     return {
-      query: {type: String, reflected: true}
+      query: {type: String, reflected: true},
+      current: {type: String},
+      counts: {type: Object}
     }
   }
 
@@ -21,11 +23,14 @@ class SearchHeader extends LitElement {
   render () {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <img class="brand" src="/vendor/beaker-app-stdlib/img/beaker-logo.png">
-      <div class="search-container">
-        <input autofocus @keyup=${this.onKeyupInput} placeholder="Search your network" class="search" value=${this.query} />
-        <i class="fa fa-search"></i>
+      <div class="top">
+        <img class="brand" src="/vendor/beaker-app-stdlib/img/beaker-logo.png">
+        <div class="search-container">
+          <input autofocus @keyup=${this.onKeyupInput} placeholder="Search your network" class="search" value=${this.query} />
+          <i class="fa fa-search"></i>
+        </div>
       </div>
+      <search-nav .counts=${this.counts} current=${this.current}></search-nav>
     `
   }
 

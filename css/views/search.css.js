@@ -24,31 +24,22 @@ a:hover {
 .layout {
   display: flex;
   overflow-y: scroll;
-  height: calc(100vh - 71px);
+  height: calc(100vh - 100px);
+  padding-left: 90px;
 }
 
 .nav {
-  flex: 0 0 220px;
-  padding: 10px;
+  flex: 0 0 180px;
+  padding: 20px;
+}
+
+.nav > * {
+  margin-bottom: 20px;
 }
 
 .content {
   flex: 1;
-  display: flex;
-}
-
-.content-center {
-  flex: 1;
-  margin-right: 10px;
-}
-
-.content-right {
-  flex: 0 0 210px;
-  padding: 20px 70px 20px 20px;
-}
-
-.content-right > * {
-  margin: 0 0 30px;
+  max-width: 1000px;
 }
 
 search-filters {
