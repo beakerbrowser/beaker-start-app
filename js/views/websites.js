@@ -237,6 +237,7 @@ class WebsitesView extends LitElement {
   async onClickNew () {
     var archive = await DatArchive.create()
     toast.create('Website created')
+    beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'editor'})
 
     // go to the type view for the new site
     var info = await archive.getInfo()

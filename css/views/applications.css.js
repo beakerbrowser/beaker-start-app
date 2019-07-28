@@ -49,13 +49,13 @@ h2 {
 }
 
 .application:hover {
-  border-color: var(--blue);
+  background: #fafafa;
 }
 
 .application img {
   width: 100px;
   height: 80px;
-  object-fit: cover;
+  object-fit: scale-down;
   margin-right: 20px;
   border-radius: 4px;
   border: 1px solid #ccc;
