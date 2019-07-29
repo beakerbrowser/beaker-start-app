@@ -124,7 +124,7 @@ class SearchView extends LitElement {
       })
       await Promise.all(items.map(async (profile) => {
         profile.isYou = profile.url === this.user.url
-        profile.followers = (await follows.list({filters: {topics: profile.url}})).map(({author}) => author)
+        profile.followers = (await follows.list({filters: {topics: profile.url, authors}})).map(({author}) => author)
         profile.follows = (await follows.list({filters: {authors: profile.url}})).map(({topic}) => topic)
       }))
     } else {
