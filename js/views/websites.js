@@ -2,20 +2,16 @@ import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/l
 import { repeat } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/repeat.js'
 import { timeDifference } from '/vendor/beaker-app-stdlib/js/time.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
-import { emit } from '/vendor/beaker-app-stdlib/js/dom.js'
 import { toNiceUrl } from '/vendor/beaker-app-stdlib/js/strings.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as QP from '../lib/query-params.js'
-import { SITE_TYPES, getTypeCategory, getTypeLabel, getTypeIcon } from '../lib/site-types.js'
+import { SITE_TYPES, getTypeLabel, getTypeIcon } from '../lib/site-types.js'
 import websitesCSS from '../../../css/views/websites.css.js'
 import '/vendor/beaker-app-stdlib/js/com/hoverable.js'
 import '../com/websites/nav.js'
 import '../com/websites/writable-filter.js'
 import '../com/websites/filters.js'
-import { getNicePhrase } from '../lib/nice-phrases.js'
-
-const NICE_PHRASE = getNicePhrase()
 
 class WebsitesView extends LitElement {
   static get properties () {
@@ -134,7 +130,6 @@ class WebsitesView extends LitElement {
           </div>
         </div>
       </div>
-      <div class="nice-phrase">${NICE_PHRASE}</div>
     `
   }
 
@@ -146,7 +141,6 @@ class WebsitesView extends LitElement {
         </div>
         <div class="item-center">
           <div class="ctrls">
-            <button @click=${e => { window.location = `beaker://editor/${item.url}` }}><span class="far fa-fw fa-edit"></span> Site Editor</button>
             <button @click=${e => this.onClickItemMenu(e, item)}><span class="fas fa-fw fa-ellipsis-h"></span></button>
           </div>
           <div class="title">
@@ -237,12 +231,7 @@ class WebsitesView extends LitElement {
   async onClickNew () {
     var archive = await DatArchive.create()
     toast.create('Website created')
-    beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'editor'})
-
-    // go to the type view for the new site
-    var info = await archive.getInfo()
-    this.currentView = getTypeCategory(info.type)
-    QP.setParams({type: this.currentView})
+    beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'site'})
     this.load()
   }
 
@@ -257,13 +246,12 @@ class WebsitesView extends LitElement {
   showMenu (item, x, y, isContextMenu) {
     var items = [
       {icon: 'fas fa-fw fa-external-link-alt', label: 'Open in new tab', click: () => window.open(item.url) },
-      {icon: 'far fa-edit', label: 'Site Editor', click: () => { window.location = `beaker://editor/${item.url}` }},
       {icon: 'fas fa-fw fa-link', label: 'Copy URL', click: () => {
         writeToClipboard(item.url)
         toast.create('Copied to your clipboard')
       }},
       '-',
-      {icon: 'fas fa-fw fa-code-branch', label: 'Fork this site', click: async () => {
+      {icon: 'far fa-fw fa-clone', label: 'Duplicate this site', click: async () => {
         await DatArchive.fork(item.url)
         this.load()
       }}

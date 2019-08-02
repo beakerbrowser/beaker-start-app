@@ -13,7 +13,7 @@ ${searchInputCSS}
 :host {
   display: block;
   height: 100vh;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 a {
@@ -50,6 +50,11 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   margin: 5px 0 15px;
+}
+
+.listing {
+  height: calc(100vh - 60px);
+  overflow: auto;
 }
 
 .search-container {
