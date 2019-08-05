@@ -8,64 +8,61 @@ ${commonCSS}
   display: block;
 }
 
-h2 {
-  text-align: center;
-  margin: 20px 0;
-  font-weight: 400;
+.layout {
+  display: flex;
+}
+
+bookmarks-nav,
+.bookmarks {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+bookmarks-nav {
+  flex: 0 0 200px;
+}
+
+.bookmarks,
+.empty {
+  flex: 1;
 }
 
 .bookmarks {
-  width: 1000px;
-  margin: 10px auto;
   font-size: 14px;
+  padding: 5px 0 200px;
 }
 
 .bookmark {
-  display: flex;
-  flex-align: center;
-  padding: 10px 16px;
-  border-radius: 16px;
+  display: block;
+  padding: 10px 18px;
+  font-size: 13px;
 }
 
 .bookmark:hover {
   background: #f5f5f5;
 }
 
-.bookmark > * {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-right: 10px;
-}
-
-.bookmark .favicon {
-  width: 16px;
-  height: 16px;
-}
-
 .bookmark .title {
-  width: 200px;
-}
-
-.bookmark .description {
-  flex: 1;
-}
-
-.bookmark .href {
-  width: 200px;
+  font-size: 16px;
   color: var(--blue);
 }
 
-.bookmark .tags {
-  width: 200px;
-  color: gray;
+.bookmark .href {
+  color: var(--blue);
 }
 
-.nice-phrase {
-  margin: 30px;
-  font-weight: 300;
-  color: #bbb;
-  text-align: center;
+.bookmark .description {
+  color: rgba(0,0,0,.75);
+}
+
+.bookmark .tags {
+  color: green;
+}
+
+.empty {
+  margin: 2rem;
+  color: #555;
+  font-size: 15px;
 }
 `
 export default cssStr

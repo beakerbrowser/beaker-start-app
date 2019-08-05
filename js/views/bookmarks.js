@@ -6,21 +6,24 @@ import { AddPinnedBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
-import { bookmarks } from '../tmp-beaker.js'
+import { profiles, follows, bookmarks } from 'dat://unwalled.garden/index.js'
 import bookmarksCSS from '../../css/views/bookmarks.css.js'
-import { getNicePhrase } from '../lib/nice-phrases.js'
-
-const NICE_PHRASE = getNicePhrase()
+import '../com/bookmarks/nav.js'
 
 class BookmarksView extends LitElement {
   static get properties() {
     return {
+      source: {type: String},
+      sources: {type: Array},
       bookmarks: {type: Array}
     }
   }
 
   constructor () {
     super()
+    this.me = null
+    this.source = 'me'
+    this.sources = null
     this.bookmarks = []
     this.load()
   }
@@ -30,7 +33,17 @@ class BookmarksView extends LitElement {
   }
 
   async load () {
-    var bs = await bookmarks.query({filters: {isOwner: true}})
+    if (!this.sources) {
+      this.me = await profiles.me()
+      this.sources = (await follows.list({filters: {authors: this.me.url}})).map(({topic}) => topic)
+    }
+
+    var bs
+    if (this.source === 'me') {
+      bs = await bookmarks.query({filters: {isOwner: true}})
+    } else {
+      bs = await bookmarks.query({filters: {isPublic: true, authors: this.source}})
+    }
     bs.sort((a, b) => (a.title || '').localeCompare(b.title || ''))
     this.bookmarks = bs
   }
@@ -39,33 +52,47 @@ class BookmarksView extends LitElement {
   // =
 
   render() {
-    if (!this.bookmarks) {
+    if (!this.me || !this.bookmarks) {
       return html`<div></div>`
     }
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
-      <h2><span class="far fa-star"></span></h2>
-      <div class="bookmarks">
-        ${repeat(this.bookmarks, b => b, b => html`
-          <a
-            class="bookmark"
-            href=${b.href}
-            @contextmenu=${e => this.onContextmenuBookmark(e, b)}
-          >
-            <img src=${'asset:favicon-32:' + b.href} class="favicon"/>
-            <div class="title">${b.title}</div>
-            <div class="href">${b.href}</div>
-            <div class="description">${b.description}</div>
-            <div class="tags">${b.tags.map(t => `#${t}`).join(', ')}</div>
-          </a>
-        `)}
+      <div class="layout">
+        <bookmarks-nav
+          me=${this.me.url}
+          current=${this.source}
+          .sources=${this.sources || []}
+          @change=${this.onChangeSource}
+        ></bookmarks-nav>
+        ${this.bookmarks.length === 0 ? html`
+          <div class="empty">No bookmarks have been shared.</div>
+        ` : html`
+          <div class="bookmarks">
+            ${repeat(this.bookmarks, b => b, b => html`
+              <a
+                class="bookmark"
+                href=${b.href}
+                @contextmenu=${e => this.onContextmenuBookmark(e, b)}
+              >
+                <div class="title">${b.title}</div>
+
+                <div class="description">${b.description}</div>
+                <div class="tags">${b.tags.map(t => `#${t}`).join(', ')}</div>
+              </a>
+            `)}
+          </div>
+        `}
       </div>
-      <div class="nice-phrase">${NICE_PHRASE}</div>
     `
   }
 
   // events
   // =
+
+  onChangeSource (e) {
+    this.source = e.detail.source
+    this.load()
+  }
 
   async onContextmenuBookmark (e, bookmark) {
     e.preventDefault()
