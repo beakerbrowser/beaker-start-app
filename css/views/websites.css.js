@@ -142,6 +142,7 @@ input.search {
 
 .item img {
   display: block;
+  background: #fff;
   width: 100px;
   height: 80px;
   object-fit: scale-down;

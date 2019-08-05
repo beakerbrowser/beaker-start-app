@@ -120,7 +120,12 @@ class WebsitesView extends LitElement {
             ></websites-filters>
             ${isViewingTrash
               ? html`<button class="primary" @click=${this.onEmptyTrash}><span class="fas fa-fw fa-trash"></span> Empty trash</button>`
-              : html`<button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New Website</button>`}
+              : html`
+                <div>
+                  <button class="primary" @click=${this.onClickNew}><span class="fas fa-fw fa-plus"></span> New Website</button>
+                  <button @click=${this.onClickHeaderMenu}><span class="fas fa-fw fa-caret-down"></span></button>
+                </div>
+              `}
           </div>
           ${!items.length
             ? html`<div class="empty"><div><span class="${isViewingTrash ? 'fas fa-trash' : 'far fa-sad-tear'}"></span></div>No ${this.currentView} found.</div>`
@@ -228,6 +233,31 @@ class WebsitesView extends LitElement {
     this.showMenu(item, rect.right + 4, rect.bottom + 8, false)
   }
 
+  onClickHeaderMenu (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    var rect = e.currentTarget.getClientRects()[0]
+    contextMenu.create({
+      x: rect.right + 4, 
+      y: rect.bottom + 8,
+      right: true,
+      withTriangle: true,
+      roomy: true,
+      noBorders: true,
+      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
+      style: `padding: 4px 0`,
+      items: [
+        {icon: 'fas fa-fw fa-drafting-compass', label: 'Create New Theme', click: async () => {          
+          var archive = await DatArchive.create({title: 'Untitled Theme', type: 'unwalled.garden/theme', prompt: false, template: 'theme'})
+          toast.create('Theme created')
+          beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'site'})
+          this.load()
+        }}
+      ]
+    })
+  }
+
   async onClickNew () {
     var archive = await DatArchive.create()
     toast.create('Website created')
@@ -245,7 +275,7 @@ class WebsitesView extends LitElement {
 
   showMenu (item, x, y, isContextMenu) {
     var items = [
-      {icon: 'fas fa-fw fa-external-link-alt', label: 'Open in new tab', click: () => window.open(item.url) },
+      {icon: 'fas fa-fw fa-external-link-alt', label: 'Open in new tab', click: () => beaker.browser.openUrl(item.url, {setActive: true}) },
       {icon: 'fas fa-fw fa-link', label: 'Copy URL', click: () => {
         writeToClipboard(item.url)
         toast.create('Copied to your clipboard')
