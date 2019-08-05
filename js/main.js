@@ -1,11 +1,9 @@
 import './com/blue-notice.js'
 import './views/pinned-bookmarks.js'
-import './views/applications.js'
 import './views/bookmarks.js'
 import './views/websites.js'
 import './views/search.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import { classMap } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-html/directives/class-map.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
@@ -15,7 +13,7 @@ import mainCSS from '../css/main.css.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
-const VIEWS = ['pins', 'bookmarks', 'applications', 'websites', 'search']
+const VIEWS = ['pins', 'bookmarks', 'websites', 'search']
 
 export class StartApp extends LitElement {
   static get properties() {
@@ -110,8 +108,7 @@ export class StartApp extends LitElement {
         <div class="header">
           <img src="beaker://assets/logo">
           <div class="nav">
-            ${navItem('bookmarks', 'My Bookmarks', 'far fa-star')}
-            ${navItem('applications', 'My Applications', 'far fa-window-restore')}
+            ${navItem('bookmarks', 'Bookmarks', 'far fa-star')}
             ${navItem('websites', 'My Websites', 'fas fa-sitemap')}
             ${navItem('search', 'Search', 'fas fa-search')}
           </div>
@@ -123,7 +120,6 @@ export class StartApp extends LitElement {
 
   renderView () {
     if (this.view === 'bookmarks') return html`<bookmarks-view></bookmarks-view>`
-    if (this.view === 'applications') return html`<applications-view></applications-view>`
     if (this.view === 'websites') return html`<websites-view></websites-view>`
     if (this.view === 'search') return html`<search-view></search-view>`
     return html`

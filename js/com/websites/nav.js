@@ -34,7 +34,6 @@ class WebsitesNav extends LitElement {
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div>
         ${item('websites', 'fas fa-sitemap', 'Websites')}
-        ${item('applications', 'far fa-window-restore', 'Applications')}
         ${item('people', 'far fa-user', 'People')}
         ${item('themes', 'fas fa-drafting-compass', 'Themes')}
         <hr>
