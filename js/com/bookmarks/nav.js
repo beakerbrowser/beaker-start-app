@@ -41,7 +41,9 @@ class BookmarksNav extends LitElement {
     return html`
       <link rel="stylesheet" href="/vendor/beaker-app-stdlib/css/fontawesome.css">
       <div>
+        <h5>Personal</h5>
         ${item('me', 'My Bookmarks')}
+        <h5>Shared with you</h5>
         ${repeat(this.sources, source => item(source.url, source.title))}
       </div>
     `

@@ -10,9 +10,15 @@ ${colorsCSS}
   background: #eee;
 }
 
+h5 {
+  margin: 8px;
+  color: gray;
+}
+
 a {
-  display: block;
-  padding: 12px 10px;
+  display: flex;
+  padding: 5px 10px;
+  align-items: center;
 }
 
 a {
@@ -24,19 +30,15 @@ a:hover {
 }
 
 a.current {
-  background: var(--blue);
-  color: #fff;
+  background: #ddd;
 }
 
 a img {
-  width: 32px;
-  height: 32px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   object-fit: cover;
-  position: relative;
-  top: -1px;
-  margin-right: 5px;
-  vertical-align: middle;
+  margin-right: 10px;
   border: 1px solid rgba(255, 255, 255, 0.75);
 }
 `

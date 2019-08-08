@@ -33,8 +33,8 @@ bookmarks-nav {
 }
 
 .bookmark {
-  display: block;
-  padding: 10px 18px;
+  display: flex;
+  padding: 8px 18px;
   font-size: 13px;
 }
 
@@ -42,9 +42,19 @@ bookmarks-nav {
   background: #f5f5f5;
 }
 
+.bookmark > * {
+  margin-right: 10px;
+}
+
+.bookmark .favicon {
+  width: 16px;
+  heigh: 16px;
+  object-fit: scale-down;
+}
+
 .bookmark .title {
-  font-size: 16px;
   color: var(--blue);
+  font-weight: 500;
 }
 
 .bookmark .href {
@@ -52,7 +62,7 @@ bookmarks-nav {
 }
 
 .bookmark .description {
-  color: rgba(0,0,0,.75);
+  color: rgba(0,0,0,.5);
 }
 
 .bookmark .tags {

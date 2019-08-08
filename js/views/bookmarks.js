@@ -74,8 +74,8 @@ class BookmarksView extends LitElement {
                 href=${b.href}
                 @contextmenu=${e => this.onContextmenuBookmark(e, b)}
               >
+                <img class="favicon" src="asset:favicon-16:${b.href}">
                 <div class="title">${b.title}</div>
-
                 <div class="description">${b.description}</div>
                 <div class="tags">${b.tags.map(t => `#${t}`).join(', ')}</div>
               </a>
