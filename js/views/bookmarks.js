@@ -6,9 +6,12 @@ import { AddPinnedBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
-import { profiles, follows, bookmarks } from 'dat://unwalled.garden/index.js'
 import bookmarksCSS from '../../css/views/bookmarks.css.js'
 import '../com/bookmarks/nav.js'
+
+const bookmarks = navigator.importSystemAPI('bookmarks')
+const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
+const follows = navigator.importSystemAPI('unwalled-garden-follows')
 
 class BookmarksView extends LitElement {
   static get properties() {

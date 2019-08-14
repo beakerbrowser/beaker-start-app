@@ -251,7 +251,7 @@ class WebsitesView extends LitElement {
         {icon: 'fas fa-fw fa-drafting-compass', label: 'Create New Theme', click: async () => {          
           var archive = await DatArchive.create({title: 'Untitled Theme', type: 'unwalled.garden/theme', prompt: false, template: 'theme'})
           toast.create('Theme created')
-          beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'site'})
+          beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarPanel: 'site'})
           this.load()
         }}
       ]
@@ -261,7 +261,7 @@ class WebsitesView extends LitElement {
   async onClickNew () {
     var archive = await DatArchive.create()
     toast.create('Website created')
-    beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarApp: 'site'})
+    beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarPanel: 'site'})
     this.load()
   }
 

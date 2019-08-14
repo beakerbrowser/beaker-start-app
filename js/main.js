@@ -3,6 +3,7 @@ import './views/pinned-bookmarks.js'
 import './views/bookmarks.js'
 import './views/websites.js'
 import './views/search.js'
+import './views/setup.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
@@ -13,7 +14,7 @@ import mainCSS from '../css/main.css.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
-const VIEWS = ['pins', 'bookmarks', 'websites', 'search']
+const VIEWS = ['pins', 'bookmarks', 'websites', 'search', 'setup']
 
 export class StartApp extends LitElement {
   static get properties() {
@@ -87,13 +88,6 @@ export class StartApp extends LitElement {
     <a href="#" @click=${this.onClickCloud}>
       <span class="fas fa-cloud"></span>
     </a>
-    ${this.user
-      ? html`
-        <a class="user-profile" href="#" @click=${this.onClickUserProfile}>
-          <img src="asset:thumb:${this.user.url}">
-        </a>
-      `
-      : ''}
     </div>*/
 
   renderHeader () {
@@ -122,6 +116,7 @@ export class StartApp extends LitElement {
     if (this.view === 'bookmarks') return html`<bookmarks-view></bookmarks-view>`
     if (this.view === 'websites') return html`<websites-view></websites-view>`
     if (this.view === 'search') return html`<search-view></search-view>`
+    if (this.view === 'setup') return html`<setup-view></setup-view>`
     return html`
       <div class="start-view-wrapper">
         ${this.renderHeader()}
@@ -145,36 +140,6 @@ export class StartApp extends LitElement {
     el.classList.add('active')
     await cloudMenu.create()
     el.classList.remove('active')
-  }
-
-  async onClickUserProfile (e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    var el = e.currentTarget
-    el.classList.add('active')
-    var rect = el.getClientRects()[0]
-    await contextMenu.create({
-      x: rect.right + 4,
-      y: rect.bottom + 8,
-      right: true,
-      withTriangle: true,
-      roomy: true,
-      noBorders: true,
-      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
-      style: `padding: 4px 0`,
-      items: [
-        {icon: 'fas fa-external-link-alt', label: 'View my website', href: this.user.url },
-        {icon: 'fa fa-link', label: 'Copy link', click: () => {
-          writeToClipboard(this.user.url)
-          toast.create('Copied to your clipboard')
-        }},
-        '-',
-        {icon: 'fas fa-cog', label: 'Settings', click: () => { window.location = 'beaker://settings' }}
-      ]
-    })
-    el.classList.remove('active')
-    
   }
 }
 StartApp.styles = [mainCSS]

@@ -9,6 +9,7 @@ ${searchInputCSS}
   display: block;
   padding: 10px 20px 0;
   border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
 }
 
 .top {
