@@ -248,6 +248,12 @@ class WebsitesView extends LitElement {
       fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
       style: `padding: 4px 0`,
       items: [
+        {icon: 'fas fa-fw fa-pencil-ruler', label: 'Create New Template', click: async () => {          
+          var archive = await DatArchive.create({title: 'Untitled Template', type: 'unwalled.garden/template', prompt: false})
+          toast.create('Template created')
+          beaker.browser.openUrl(archive.url, {setActive: true, isSidebarActive: true, sidebarPanel: 'site'})
+          this.load()
+        }},
         {icon: 'fas fa-fw fa-drafting-compass', label: 'Create New Theme', click: async () => {          
           var archive = await DatArchive.create({title: 'Untitled Theme', type: 'unwalled.garden/theme', prompt: false, template: 'theme'})
           toast.create('Theme created')
