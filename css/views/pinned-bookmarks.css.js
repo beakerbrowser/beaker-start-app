@@ -11,7 +11,7 @@ ${commonCSS}
 .pinned-bookmarks {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 20px;
+  grid-gap: 2px;
   width: 100%;
   user-select: none;
   margin: 5px 0;
@@ -32,14 +32,28 @@ ${commonCSS}
   outline: 3px dashed var(--border-color);
 }
 
+.pinned-bookmark .thumb-container {
+  display: inline-block;
+  margin-top: 26px;
+  background: rgb(245, 247, 249);
+  border-radius: 50%;
+}
+
+.pinned-bookmark:hover .thumb-container {
+  background: rgb(228, 232, 236);
+}
+
 .pinned-bookmark .thumb {
-  margin-top: 30px;
-  width: 40px;
-  height: 40px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 10px;
   object-fit: scale-down;
 }
 
 .pinned-bookmark .title {
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
   color: #34495e;
   font-size: 12px;

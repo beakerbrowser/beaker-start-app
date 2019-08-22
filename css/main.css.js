@@ -20,12 +20,6 @@ h5 {
 }
 
 .header {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0px;
-  width: 452px;
-  z-index: 1;
   text-align: center;
 }
 
@@ -35,35 +29,43 @@ h5 {
   margin: 0 auto 30px;
 }
 
-.nav button .fa-fw {
-  color: inherit;
-  margin-right: 2px;
+#browser-links {
+  display: flex;
+  position: fixed;
+  top: 8px;
+  right: 10px;
+  z-index: 1;
 }
 
-.nav button {
-  display: inline-block;
-  cursor: pointer;
-  line-height: 32px;
-  padding: 8px 14px 8px 16px;
-  font-size: 13px;
-  color: #555;
-  background: #f5f5f5;
+#browser-links a {
+  position: relative;
+  margin-left: 10px;
+  border-radius: 4px;
+  padding: 0 6px;
+  height: 28px;
+  line-height: 28px;
+  color: #666;
+  text-decoration: none;
+}
+
+#browser-links a:hover,
+#browser-links a.active {
+  background: rgb(245, 247, 249);
+}
+
+#browser-links .user-profile {
+  padding: 0;
+}
+
+#browser-links .user-profile img {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  margin: 0 30px;
-}
-
-.nav button[data-tooltip]:hover::before {
-  transform: translate(-50%, 20px);
-}
-
-.nav button[data-tooltip]::after {
-  top: 48px;
 }
 
 .start-view-wrapper {
   position: relative;
-  margin: 10vh auto 0;
-  padding-top: 220px;
+  margin: 15vh auto 0;
   width: 460px;
 }
 
@@ -78,24 +80,10 @@ start-pinned-bookmarks {
   }
 }
 
-@media (min-width: 740px) {
+@media (min-width: 800px) {
   .start-view-wrapper,
   start-pinned-bookmarks {
-    width: 700px;
-  }
-}
-
-@media (min-width: 900px) {
-  .start-view-wrapper,
-  start-pinned-bookmarks {
-    width: 830px;
-  }
-}
-
-@media (min-width: 1100px) {
-  .start-view-wrapper,
-  start-pinned-bookmarks {
-    width: 950px;
+    width: 720px;
   }
 }
 `

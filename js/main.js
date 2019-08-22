@@ -64,6 +64,7 @@ export class StartApp extends LitElement {
     }
     el.reset()
     el.load()
+    this.requestUpdate()
   }
 
   async setView (v, params = null) {
@@ -83,35 +84,7 @@ export class StartApp extends LitElement {
       <div class="views" @set-view=${this.onSetView}>${this.renderView()}</div>
     `
   }
-
- /*TODO<div id="browser-links">
-    <a href="#" @click=${this.onClickCloud}>
-      <span class="fas fa-cloud"></span>
-    </a>
-    </div>*/
-
-  renderHeader () {
-    const navItem = (v, label, icon) => {
-      return html`
-        <button class="transparent tooltip-nodelay" @click=${e => this.setView(v)} title=${label} data-tooltip=${label}>
-          <span class="fa-fw ${icon}"></span>
-        </button>`
-    }
-    if (this.view === 'pins') {
-      return html`
-        <div class="header">
-          <img src="beaker://assets/logo">
-          <div class="nav">
-            ${navItem('bookmarks', 'Bookmarks', 'far fa-star')}
-            ${navItem('websites', 'My Websites', 'fas fa-sitemap')}
-            ${navItem('search', 'Search', 'fas fa-search')}
-          </div>
-        </div>
-      `
-    }
-    return html``
-  }
-
+  
   renderView () {
     if (this.view === 'bookmarks') return html`<bookmarks-view></bookmarks-view>`
     if (this.view === 'websites') return html`<websites-view></websites-view>`
@@ -119,7 +92,13 @@ export class StartApp extends LitElement {
     if (this.view === 'setup') return html`<setup-view></setup-view>`
     return html`
       <div class="start-view-wrapper">
-        ${this.renderHeader()}
+        <div id="browser-links">
+          <a href="#" @click=${e => this.setView('websites')}><span class="fas fa-fw fa-book"></span> My Library</a>
+          ${this.user ? html`<a href=${this.user.url}><span class="far fa-fw fa-user-circle"></span> My Website</a>` : ''}
+        </div>
+        <div class="header">
+          <img src="beaker://assets/logo">
+        </div>
         <start-pinned-bookmarks></start-pinned-bookmarks>
       </div>
     `

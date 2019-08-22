@@ -59,7 +59,9 @@ class PinnedBookmarks extends LitElement {
               @dragleave=${e => this.onDragleave(e, b)}
               @drop=${e => this.onDrop(e, b)}
             >
-              <img src=${'asset:thumb:' + b.href} class="thumb"/>
+              <div class="thumb-container">
+                <img src=${'asset:favicon:' + b.href} class="thumb"/>
+              </div>
               <div class="title">${b.title}</div>
             </a>
           `)}
