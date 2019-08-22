@@ -1,20 +1,14 @@
 import './com/blue-notice.js'
 import './views/pinned-bookmarks.js'
-import './views/bookmarks.js'
-import './views/websites.js'
-import './views/search.js'
 import './views/setup.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
-import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
-import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import * as cloudMenu from './com/cloud-menu.js'
 import * as QP from './lib/query-params.js'
 import mainCSS from '../css/main.css.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
-const VIEWS = ['pins', 'bookmarks', 'websites', 'search', 'setup']
+const VIEWS = ['pins', 'setup']
 
 export class StartApp extends LitElement {
   static get properties() {
@@ -84,16 +78,13 @@ export class StartApp extends LitElement {
       <div class="views" @set-view=${this.onSetView}>${this.renderView()}</div>
     `
   }
-  
+
   renderView () {
-    if (this.view === 'bookmarks') return html`<bookmarks-view></bookmarks-view>`
-    if (this.view === 'websites') return html`<websites-view></websites-view>`
-    if (this.view === 'search') return html`<search-view></search-view>`
     if (this.view === 'setup') return html`<setup-view></setup-view>`
     return html`
       <div class="start-view-wrapper">
         <div id="browser-links">
-          <a href="#" @click=${e => this.setView('websites')}><span class="fas fa-fw fa-book"></span> My Library</a>
+          <a href="beaker://library/" @click=${e => this.setView('websites')}><span class="fas fa-fw fa-book"></span> Library</a>
           ${this.user ? html`<a href=${this.user.url}><span class="far fa-fw fa-user-circle"></span> My Website</a>` : ''}
         </div>
         <div class="header">

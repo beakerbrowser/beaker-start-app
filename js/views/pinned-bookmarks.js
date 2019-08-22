@@ -6,8 +6,9 @@ import { AddPinnedBookmarkPopup } from '/vendor/beaker-app-stdlib/js/com/popups/
 import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import { writeToClipboard } from '/vendor/beaker-app-stdlib/js/clipboard.js'
 import _debounce from '/vendor/lodash.debounce.js'
-import { bookmarks } from '../tmp-beaker.js'
 import pinnedBookmarksCSS from '../../css/views/pinned-bookmarks.css.js'
+
+const bookmarks = navigator.importSystemAPI('bookmarks')
 
 class PinnedBookmarks extends LitElement {
   static get properties() {

@@ -1,6 +1,4 @@
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
-import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
-import * as toast from '/vendor/beaker-app-stdlib/js/com/toast.js'
 import setupCSS from '../../css/views/setup.css.js'
 import '../com/setup/profile-form.js'
 import '../com/setup/theme.js'
