@@ -1,5 +1,4 @@
-import './com/blue-notice.js'
-import './views/pinned-bookmarks.js'
+import './views/pins.js'
 import './views/setup.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import * as cloudMenu from './com/cloud-menu.js'
@@ -52,7 +51,7 @@ export class StartApp extends LitElement {
   async loadView () {
     var el
     if (this.view === 'pins') {
-      el = this.shadowRoot.querySelector('start-pinned-bookmarks')
+      el = this.shadowRoot.querySelector('start-pins')
     } else {
       el = this.shadowRoot.querySelector(this.view + '-view')
     }
@@ -90,7 +89,7 @@ export class StartApp extends LitElement {
         <div class="header">
           <img src="beaker://assets/logo">
         </div>
-        <start-pinned-bookmarks></start-pinned-bookmarks>
+        <start-pins></start-pins>
       </div>
     `
   }

@@ -8,7 +8,7 @@ ${commonCSS}
   display: block;
 }
 
-.pinned-bookmarks {
+.pins {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 2px;
@@ -17,33 +17,33 @@ ${commonCSS}
   margin: 5px 0;
 }
 
-.pinned-bookmark {
+.pin {
   background: #fff;
   text-align: center;
   height: 120px;
   border-radius: 16px;
 }
 
-.pinned-bookmark:hover {
+.pin:hover {
   background: rgb(245, 247, 249);
 }
 
-.pinned-bookmark.drag-hover {
+.pin.drag-hover {
   outline: 3px dashed var(--border-color);
 }
 
-.pinned-bookmark .thumb-container {
+.pin .thumb-container {
   display: inline-block;
   margin-top: 26px;
   background: rgb(245, 247, 249);
   border-radius: 50%;
 }
 
-.pinned-bookmark:hover .thumb-container {
+.pin:hover .thumb-container {
   background: rgb(228, 232, 236);
 }
 
-.pinned-bookmark .thumb {
+.pin .thumb {
   display: block;
   width: 20px;
   height: 20px;
@@ -51,7 +51,7 @@ ${commonCSS}
   object-fit: scale-down;
 }
 
-.pinned-bookmark .title {
+.pin .title {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -72,24 +72,24 @@ ${commonCSS}
 }
 
 @media (min-width: 640px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .pins-container .pins {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media (min-width: 740px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .pins-container .pins {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
 @media (min-width: 900px) {
-  .pinned-bookmarks-container .pinned-bookmarks {
+  .pins-container .pins {
     grid-template-columns: repeat(6, 1fr);
   }
 }
 
-.pinned-bookmarks-container .pinned-bookmark.explorer-pin i {
+.pins-container .pin.explorer-pin i {
   font-size: 27px;
   margin-top: 44px;
 }
