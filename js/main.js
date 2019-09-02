@@ -2,8 +2,10 @@ import './views/pins.js'
 import './views/setup.js'
 import { LitElement, html } from '/vendor/beaker-app-stdlib/vendor/lit-element/lit-element.js'
 import * as cloudMenu from './com/cloud-menu.js'
+import * as contextMenu from '/vendor/beaker-app-stdlib/js/com/context-menu.js'
 import * as QP from './lib/query-params.js'
 import mainCSS from '../css/main.css.js'
+import libTools from '/vendor/library-tools/index.build.js'
 
 const profiles = navigator.importSystemAPI('unwalled-garden-profiles')
 
@@ -83,8 +85,16 @@ export class StartApp extends LitElement {
     return html`
       <div class="start-view-wrapper">
         <div id="browser-links">
-          <a href="beaker://library/" @click=${e => this.setView('websites')}><span class="fas fa-fw fa-book"></span> Library</a>
-          ${this.user ? html`<a href=${this.user.url}><span class="far fa-fw fa-user-circle"></span> My Website</a>` : ''}
+          <a href="beaker://library/?view=bookmarks"><span class="fa-fw far fa-star"></span> Bookmarks</a>
+          <a href="beaker://library/?view=people"><span class="fa-fw ${libTools.getFAIcon('people')}"></span> People</a>
+          <a href="beaker://library/?view=websites"><span class="fa-fw ${libTools.getFAIcon('websites')}"></span> Websites</a>
+          <a href="beaker://library/?view=modules"><span class="fa-fw ${libTools.getFAIcon('modules')}"></span> Modules</a>
+          <a href="#" @click=${this.onClickMore}>More <span class="fas fa-caret-down"></span></a>
+          <div style="flex: 1"></div>
+          <a href="#" @click=${this.onClickNewWebsite}><span class="fas fa-fw fa-plus"></span> New Website</a>
+          ${this.user ? html`
+          <a href=${this.user.url}><span class="far fa-fw fa-user-circle"></span> My Profile</a>
+          ` : ''}
         </div>
         <div class="header">
           <img src="beaker://assets/logo">
@@ -99,6 +109,34 @@ export class StartApp extends LitElement {
 
   onSetView (e) {
     this.setView(e.detail.view, e.detail.params)
+  }
+
+  onClickMore (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    var rect = e.currentTarget.getClientRects()[0]
+    contextMenu.create({
+      x: rect.left,
+      y: rect.bottom,
+      fontAwesomeCSSUrl: '/vendor/beaker-app-stdlib/css/fontawesome.css',
+      noBorders: true,
+      roomy: true,
+      items: [
+        {icon: libTools.getFAIcon('templates'), label: 'Templates', href: 'beaker://library?view=templates'},
+        {icon: libTools.getFAIcon('themes'), label: 'Themes', href: 'beaker://library?view=themes'},
+        '-',
+        {icon: 'fas fa-trash', label: 'Trash', href: 'beaker://library?view=trash'},
+      ]
+    })
+  }
+
+  async onClickNewWebsite (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    var a = await DatArchive.create()
+    window.location = a.url
   }
 
   async onClickCloud (e) {

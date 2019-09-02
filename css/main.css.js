@@ -30,27 +30,37 @@ h5 {
 }
 
 #browser-links {
-  display: flex;
   position: fixed;
-  top: 8px;
-  right: 10px;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 0 6px 0 0px;
+  box-sizing: border-box;
+}
+
+#browser-links > span {
+  color: #34495e;
+  font-weight: 500;
+  height: 28px;
+  line-height: 28px;
 }
 
 #browser-links a {
   position: relative;
   margin-left: 10px;
-  border-radius: 4px;
   padding: 0 6px;
   height: 28px;
   line-height: 28px;
-  color: #666;
+  color: #34495e;
   text-decoration: none;
 }
 
-#browser-links a:hover,
-#browser-links a.active {
-  background: rgb(245, 247, 249);
+#browser-links a:hover{
+  background: #eee;
 }
 
 #browser-links .user-profile {

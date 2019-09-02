@@ -1,0 +1,3 @@
+[submodule "vendor/library-tools"]
+	path = vendor/library-tools
+	url = https://github.com/beakerbrowser/library-tools.git
